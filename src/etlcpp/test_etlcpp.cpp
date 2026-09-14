@@ -8,7 +8,8 @@
 
 struct EtlCpp
 {
-    static constexpr size_t BufferSize = 4096U;
+    static constexpr size_t EncodeBufferSize = 4096U;
+    static constexpr size_t DecodeBufferSize = 4095U;
 
     static std::string encode(const std::string& bytes)
     {
@@ -20,8 +21,8 @@ struct EtlCpp
             result.append(chunk.begin(), chunk.end());
         };
 
-        etl::base64_rfc4648_padding_encoder<BufferSize>::callback_type callback = append;
-        etl::base64_rfc4648_padding_encoder<BufferSize> encoder(callback);
+        etl::base64_rfc4648_padding_encoder<EncodeBufferSize>::callback_type callback = append;
+        etl::base64_rfc4648_padding_encoder<EncodeBufferSize> encoder(callback);
         if (!encoder.encode_final(bytes.begin(), bytes.end()))
         {
             throw std::runtime_error("ETL base64 encoding failed");
@@ -40,8 +41,8 @@ struct EtlCpp
             result.append(reinterpret_cast<const char*>(chunk.data()), chunk.size());
         };
 
-        etl::base64_rfc4648_padding_decoder<BufferSize>::callback_type callback = append;
-        etl::base64_rfc4648_padding_decoder<BufferSize> decoder(callback);
+        etl::base64_rfc4648_padding_decoder<DecodeBufferSize>::callback_type callback = append;
+        etl::base64_rfc4648_padding_decoder<DecodeBufferSize> decoder(callback);
         if (!decoder.decode_final(base64.begin(), base64.end()))
         {
             throw std::runtime_error("ETL base64 decoding failed");
