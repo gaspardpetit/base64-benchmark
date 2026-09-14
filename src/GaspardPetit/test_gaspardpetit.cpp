@@ -1,6 +1,8 @@
 #include "../Base64SurveyRegistry.hpp"
 
+#ifndef GASPARDPETIT_COMPILED
 #define BASE64_HEADER_ONLY
+#endif
 #include "../../libs/gaspardpetit/base64/base64.h"
 
 #include <string>
