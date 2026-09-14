@@ -71,6 +71,6 @@
 [submodule "libs/etl"]
 	path = libs/etl
 	url = https://github.com/ETLCPP/etl.git
-[submodule "libs/base64"]
-	path = libs/base64
+[submodule "libs/gaspardpetit/base64"]
+	path = libs/gaspardpetit/base64
 	url = https://github.com/gaspardpetit/base64.git

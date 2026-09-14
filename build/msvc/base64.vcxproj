@@ -28,26 +28,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -199,6 +199,7 @@
     <ClCompile Include="..\..\src\base64-aklomp\test_base64-aklomp.cpp" />
     <ClCompile Include="..\..\src\base64-tl\test_base64-tl.cpp" />
     <ClCompile Include="..\..\src\base64pp\test_base64pp.cpp" />
+    <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit.cpp" />
     <ClCompile Include="..\..\src\Base64SurveyBenchmark.cpp" />
     <ClCompile Include="..\..\src\Base64SurveyRepoort.cpp" />
     <ClCompile Include="..\..\src\Base64SurveyRegistry.cpp" />
@@ -258,6 +259,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\libs\gaspardpetit\base64\base64.h" />
     <ClInclude Include="..\..\src\adition\adition.hpp" />
     <ClInclude Include="..\..\src\apache\apache.h" />
     <ClInclude Include="..\..\src\arduino\arduino.h" />
