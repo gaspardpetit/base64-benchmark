@@ -21,6 +21,10 @@ I do not own any of these implementations - make sure you check their respective
 
 ## Compared implementations
 
+### Embedded Template Library (ETL)
+From https://github.com/ETLCPP/etl
+A streaming, fixed-capacity C++ implementation intended for embedded systems
+
 ### base64 (Alfred Klomp)
 From https://github.com/aklomp/base64
 A fast C99 implementation with SIMD acceleration 
