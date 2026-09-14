@@ -9,42 +9,76 @@
 #define base64_decode_unchecked gaspardpetit_simd_decode_unchecked
 #include "../../libs/gaspardpetit/base64/base64.h"
 
+#if (defined(_MSC_VER) && defined(_M_X64)) || defined(__x86_64__)
+#include "../../libs/gaspardpetit/base64/base64_avx2.h"
+#define GASPARDPETIT_DIRECT_AVX2 1
+#endif
+
 #include <algorithm>
 #include <string>
 
 namespace {
 
+static size_t simd_encode(const unsigned char* input, size_t length,
+                          char* output)
+{
+#if defined(GASPARDPETIT_DIRECT_AVX2)
+    return base64_avx2_encode(input, length, output);
+#else
+    return base64_encode(input, length, output);
+#endif
+}
+
+static size_t simd_decode(const unsigned char* input, size_t length,
+                          unsigned char* output)
+{
+#if defined(GASPARDPETIT_DIRECT_AVX2)
+    return base64_avx2_decode_standard(input, length, output);
+#else
+    return base64_decode(input, length, output, 0);
+#endif
+}
+
+static size_t simd_decode_unchecked(const unsigned char* input,
+                                    size_t length, unsigned char* output)
+{
+#if defined(GASPARDPETIT_DIRECT_AVX2)
+    return base64_avx2_decode_standard_unchecked(input, length, output);
+#else
+    return base64_decode_unchecked(input, length, output, 0);
+#endif
+}
+
 struct GaspardPetit_SIMD
 {
     static size_t encode_into(const std::string& bytes, char* output)
     {
-        return base64_encode(
+        return simd_encode(
             reinterpret_cast<const unsigned char*>(bytes.data()),
             bytes.size(), output);
     }
 
     static size_t decode_into(const std::string& encoded, unsigned char* output)
     {
-        return base64_decode(
+        return simd_decode(
             reinterpret_cast<const unsigned char*>(encoded.data()),
-            encoded.size(), output, 0);
+            encoded.size(), output);
     }
 
     static std::string encode(const std::string& bytes)
     {
         std::string result(base64_encoded_size(bytes.size()), '\0');
-        base64_encode(reinterpret_cast<const unsigned char*>(bytes.data()),
-                      bytes.size(), result.data());
+        simd_encode(reinterpret_cast<const unsigned char*>(bytes.data()),
+                    bytes.size(), result.data());
         return result;
     }
 
     static std::string decode(const std::string& encoded)
     {
         std::string result(base64_decoded_max_size(encoded.size()), '\0');
-        const size_t size = base64_decode(
+        const size_t size = simd_decode(
             reinterpret_cast<const unsigned char*>(encoded.data()),
-            encoded.size(), reinterpret_cast<unsigned char*>(result.data()),
-            0);
+            encoded.size(), reinterpret_cast<unsigned char*>(result.data()));
         if (size == BASE64_ERROR)
             return {};
         result.resize(size);
@@ -56,18 +90,17 @@ struct GaspardPetit_SIMD_Unchecked
 {
     static size_t decode_into(const std::string& encoded, unsigned char* output)
     {
-        return base64_decode_unchecked(
+        return simd_decode_unchecked(
             reinterpret_cast<const unsigned char*>(encoded.data()),
-            encoded.size(), output, 0);
+            encoded.size(), output);
     }
 
     static std::string decode(const std::string& encoded)
     {
         std::string result(base64_decoded_max_size(encoded.size()), '\0');
-        const size_t size = base64_decode_unchecked(
+        const size_t size = simd_decode_unchecked(
             reinterpret_cast<const unsigned char*>(encoded.data()),
-            encoded.size(), reinterpret_cast<unsigned char*>(result.data()),
-            0);
+            encoded.size(), reinterpret_cast<unsigned char*>(result.data()));
         if (size == BASE64_ERROR)
             return {};
         result.resize(size);
@@ -163,10 +196,10 @@ TEST(GaspardPetit_SIMD, validates_every_short_anchored_lane)
             invalid = encoded;
             invalid[position] = '!';
             EXPECT_EQ(BASE64_ERROR,
-                base64_decode(
+                simd_decode(
                     reinterpret_cast<const unsigned char*>(invalid.data()),
                     invalid.size(),
-                    reinterpret_cast<unsigned char*>(output.data()), 0))
+                    reinterpret_cast<unsigned char*>(output.data())))
                 << "payload " << payload_size << ", position " << position;
         }
     }
@@ -187,10 +220,10 @@ TEST(GaspardPetit_SIMD, standard_decoder_rejects_url_safe_alphabet)
             if (valid)
                 continue;
             encoded[position] = static_cast<char>(byte);
-            EXPECT_EQ(BASE64_ERROR, base64_decode(
+            EXPECT_EQ(BASE64_ERROR, simd_decode(
                 reinterpret_cast<const unsigned char*>(encoded.data()),
                 encoded.size(),
-                reinterpret_cast<unsigned char*>(decoded.data()), 0))
+                reinterpret_cast<unsigned char*>(decoded.data())))
                 << "position " << position << ", byte " << byte;
         }
         encoded[position] = 'A';
