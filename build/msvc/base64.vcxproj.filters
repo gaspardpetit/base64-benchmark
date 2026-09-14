@@ -247,9 +247,6 @@
     <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit.cpp">
       <Filter>impl\GaspardPetit</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit_avx2.cpp">
-      <Filter>impl\GaspardPetit</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit_simd.cpp">
       <Filter>impl\GaspardPetit</Filter>
     </ClCompile>

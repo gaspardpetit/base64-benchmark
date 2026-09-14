@@ -97,11 +97,6 @@ if(TARGET gaspardpetit_simd)
     ./src/GaspardPetit/test_gaspardpetit_simd.cpp
   )
 endif()
-if(MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8)
-  list(APPEND CTR_SOURCES
-    ./src/GaspardPetit/test_gaspardpetit_avx2.cpp
-  )
-endif()
 aux_source_directory(./src/picobase64 CTR_SOURCES)
 aux_source_directory(./src/simdutf CTR_SOURCES)
 aux_source_directory(./src/etlcpp CTR_SOURCES)
