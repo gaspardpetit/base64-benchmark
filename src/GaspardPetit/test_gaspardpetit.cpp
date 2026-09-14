@@ -18,9 +18,7 @@ struct GaspardPetit
 
     static std::string decode(const std::string& encoded)
     {
-        size_t padding = !encoded.empty() && encoded.back() == '=';
-        padding += encoded.size() > 1 && encoded[encoded.size() - 2] == '=';
-        std::string result(encoded.size() / 4U * 3U - padding, '\0');
+        std::string result(base64_decoded_max_size(encoded.size()), '\0');
         const size_t size = base64_decode(
             reinterpret_cast<const unsigned char*>(encoded.data()),
             encoded.size(),
