@@ -1,7 +1,7 @@
 # Benchmark results Results for Encoding
 
 
-[The latest results are here](https://rawcdn.githack.com/gaspardpetit/base64/294fac8a0e679cbe72f0a3d6f40e1a3bccba7c5d/result/result.html)
+[The latest results are here](https://gaspardpetit.github.io/base64-benchmark/)
 
 # base64
 
