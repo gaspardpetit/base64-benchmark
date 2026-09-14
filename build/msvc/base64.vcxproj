@@ -200,10 +200,6 @@
     <ClCompile Include="..\..\src\base64-tl\test_base64-tl.cpp" />
     <ClCompile Include="..\..\src\base64pp\test_base64pp.cpp" />
     <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit.cpp" />
-    <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit_avx2.cpp">
-      <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Full</Optimization>
-    </ClCompile>
     <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit_simd.cpp">
       <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
     </ClCompile>
