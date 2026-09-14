@@ -84,7 +84,28 @@ aux_source_directory(./src/boost CTR_SOURCES)
 set_source_files_properties( ${CTR_SOURCES} PROPERTIES LANGUAGE CXX )
 set_source_files_properties( ${C_SOURCES} PROPERTIES LANGUAGE C )
 
+# Compile only the AVX2 backend with AVX2 enabled; dispatch stays baseline x86-64.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND
+   CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$" AND
+   CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  add_library(gaspardpetit_base64 STATIC
+    libs/gaspardpetit/base64/base64.c
+    libs/gaspardpetit/base64/base64_avx2.c)
+  set_source_files_properties(libs/gaspardpetit/base64/base64_avx2.c
+    PROPERTIES COMPILE_OPTIONS "-mavx2")
+  # Klomp exports the same C names; isolate this library within the survey.
+  set(gaspardpetit_symbols
+    base64_encode=gaspardpetit_encode
+    base64_decode=gaspardpetit_decode)
+  target_compile_definitions(gaspardpetit_base64 PRIVATE ${gaspardpetit_symbols})
+  set_source_files_properties(src/GaspardPetit/test_gaspardpetit.cpp
+    PROPERTIES COMPILE_DEFINITIONS "GASPARDPETIT_COMPILED;${gaspardpetit_symbols}")
+endif()
+
 add_executable(${PROJECT_NAME} ${CTR_SOURCES} ${C_SOURCES})
+if(TARGET gaspardpetit_base64)
+  target_link_libraries(${PROJECT_NAME} PRIVATE gaspardpetit_base64)
+endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE GTest::gtest GTest::gtest_main base64pp base64 etl::etl)
 
 add_test(NAME unit-tests COMMAND ${PROJECT_NAME} --tests-only)
