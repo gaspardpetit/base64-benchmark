@@ -13,6 +13,49 @@ This project aims at collecting and comparing the different implementations avai
  
 Feel free to improve this test or to submit new implementations! 
 
+## Build and run
+
+After cloning the repository, initialize its dependencies from the project root:
+
+```sh
+git submodule update --init --recursive
+```
+
+### Windows
+
+Install Visual Studio 2022 with the **Desktop development with C++** workload, including the MSVC v143 toolset and Windows SDK.
+
+1. Open `build/msvc/base64.sln` in Visual Studio.
+2. Select the **Release** configuration and **x64** platform.
+3. Build the solution.
+4. Set `base64` as the startup project and choose **Debug > Start Without Debugging** (`Ctrl+F5`) to run it.
+
+### Linux and macOS
+
+Install CMake 3.25 or newer, a C/C++ compiler with C++20 support, and Make. On macOS, the compiler and Make are available through the Xcode Command Line Tools (`xcode-select --install`); install CMake separately.
+
+The configure, build, and run commands are identical on Linux and macOS. Run these from the project root:
+
+```sh
+cmake -S . -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+./build/base64-benchmark
+```
+
+CMake fetches GoogleTest during configuration, so the initial configuration requires internet access.
+
+### Running the benchmarks
+
+The executable first runs correctness tests, then benchmarks encoding and decoding for input sizes from 32 bytes to 64 KiB. It prints results and writes `encode-*.js` and `decode-*.js` reports to a `result/` directory relative to its working directory.
+
+For a CMake build, you can also run it through CTest:
+
+```sh
+ctest --test-dir build -C Release --output-on-failure
+```
+
+CTest runs the full benchmarks as well as the correctness tests, and writes reports under `build/result/`.
+
 ### Disclaimer
 
 Keep in mind that some implementations were slightly modified to have a common interface for the test framework.  In all cases, line breaks were omitted both for encoding and parsing. Also, although all implementations have been unit-tested, no analysis whatsoever has been made on error handling, so some slower implementation may actually be better at reporting malformed base64 strings for instance.
