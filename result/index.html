@@ -74,11 +74,11 @@
   </main>
 
   <script src="result/encode-msvc1951.js"></script><script src="result/decode-msvc1951.js"></script>
-  <script src="result/encode-clang15.js"></script><script src="result/decode-clang15.js"></script>
+  <script src="result/encode-clang20.js"></script><script src="result/decode-clang20.js"></script>
   <script src="result/encode-clang21-macos.js"></script><script src="result/decode-clang21-macos.js"></script>
   <script>
   "use strict";
-  const platforms={ubuntu:{label:"Linux",title:"Clang 15",machine:"Ubuntu · AMD Ryzen 7 5700G",encode:encode_result_clang15,decode:decode_result_clang15},windows:{label:"Windows",title:"MSVC 19.51",machine:"Windows · Intel Core i9-13900K @ 3.0 GHz",encode:encode_result_msvc1951,decode:decode_result_msvc1951},macos:{label:"macOS",title:"AppleClang 21",machine:"macOS · MacBook Air M4",encode:encode_result_clang21_macos,decode:decode_result_clang21_macos}};
+  const platforms={ubuntu:{label:"Linux",title:"Clang 20.1.2",machine:"Ubuntu 24.04 · AMD Ryzen 7 5700G · Release · 2026-09-14",encode:encode_result_clang20,decode:decode_result_clang20},windows:{label:"Windows",title:"MSVC 19.51",machine:"Windows · Intel Core i9-13900K @ 3.0 GHz",encode:encode_result_msvc1951,decode:decode_result_msvc1951},macos:{label:"macOS",title:"AppleClang 21",machine:"macOS · MacBook Air M4",encode:encode_result_clang21_macos,decode:decode_result_clang21_macos}};
   const metrics={encode:{label:"Encode",detail:"Binary to Base64"},decode:{label:"Decode",detail:"Base64 to binary"},both:{label:"Combined",detail:"Encode + decode"}};
   const themePreference=matchMedia("(prefers-color-scheme: dark)");
   const baseColors=["#63e6be","#74c0fc","#ffd43b","#da77f2","#ff8787","#a9e34b","#ffa94d","#91a7ff","#f783ac","#66d9e8","#c0eb75","#b197fc","#ffec99","#8ce99a","#e599f7","#ffc078"];
