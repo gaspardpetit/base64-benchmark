@@ -3,6 +3,7 @@
 #include "Base64SurveyRegistry.hpp"
 #include "Base64SurveyReport.hpp"
 
+#include <algorithm>
 #include <vector>
 #include <chrono>
 
@@ -15,21 +16,32 @@ struct Base64SurveyBenchmark
     template<typename _FN>
     static pair<int, microseconds> RunUntil(int maxIter, chrono::milliseconds maxMS, _FN &&fn)
     {
-        // run N iterations, or break after 0.5s
-        using Clock = chrono::high_resolution_clock;
-        time_point t1 = Clock::now();
-
+        // Grow batches until they take about 1 ms, amortizing clock reads
+        // while keeping the time-limit overshoot small for slow conversions.
+        using Clock = chrono::steady_clock;
+        const auto t1 = Clock::now();
+        auto batchStart = t1;
+        auto t2 = t1;
+        constexpr int maxBatchSize = 65536;
+        int batchSize = 1;
         int iter = 0;
-        while (iter++ < maxIter)
+        while (iter < maxIter)
         {
-            fn();
+            const int count = std::min(batchSize, maxIter - iter);
+            for (int i = 0; i < count; ++i)
+                fn();
+            iter += count;
 
-            if (Clock::now() - t1 >= maxMS)
+            t2 = Clock::now();
+            if (t2 - t1 >= maxMS)
                 break;
+
+            if (t2 - batchStart < chrono::milliseconds(1))
+                batchSize = std::min(batchSize * 2, maxBatchSize);
+            batchStart = t2;
         }
 
-        chrono::time_point t2 = Clock::now();
-        chrono::microseconds elapsed = duration_cast<chrono::microseconds>(t2 - t1);
+        const auto elapsed = duration_cast<chrono::microseconds>(t2 - t1);
         return make_pair(iter, elapsed);
     }
 
