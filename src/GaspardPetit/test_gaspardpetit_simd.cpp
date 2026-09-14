@@ -16,6 +16,20 @@ namespace {
 
 struct GaspardPetit_SIMD
 {
+    static size_t encode_into(const std::string& bytes, char* output)
+    {
+        return base64_encode(
+            reinterpret_cast<const unsigned char*>(bytes.data()),
+            bytes.size(), output);
+    }
+
+    static size_t decode_into(const std::string& encoded, unsigned char* output)
+    {
+        return base64_decode(
+            reinterpret_cast<const unsigned char*>(encoded.data()),
+            encoded.size(), output, 0);
+    }
+
     static std::string encode(const std::string& bytes)
     {
         std::string result(base64_encoded_size(bytes.size()), '\0');
@@ -40,6 +54,13 @@ struct GaspardPetit_SIMD
 
 struct GaspardPetit_SIMD_Unchecked
 {
+    static size_t decode_into(const std::string& encoded, unsigned char* output)
+    {
+        return base64_decode_unchecked(
+            reinterpret_cast<const unsigned char*>(encoded.data()),
+            encoded.size(), output, 0);
+    }
+
     static std::string decode(const std::string& encoded)
     {
         std::string result(base64_decoded_max_size(encoded.size()), '\0');
@@ -55,8 +76,11 @@ struct GaspardPetit_SIMD_Unchecked
 };
 
 BASE64_REGISTER_ENCODER(GaspardPetit_SIMD);
+BASE64_REGISTER_RAW_ENCODER(GaspardPetit_SIMD);
 BASE64_REGISTER_DECODER(GaspardPetit_SIMD);
 BASE64_REGISTER_DECODER(GaspardPetit_SIMD_Unchecked);
+BASE64_REGISTER_RAW_DECODER(GaspardPetit_SIMD);
+BASE64_REGISTER_RAW_DECODER(GaspardPetit_SIMD_Unchecked);
 
 TEST(GaspardPetit_SIMD, binary_round_trip)
 {
@@ -121,6 +145,30 @@ TEST(GaspardPetit_SIMD, validates_every_simd_lane)
                 << "position " << position << ", byte " << byte;
         }
         encoded[position] = 'A';
+    }
+}
+
+TEST(GaspardPetit_SIMD, validates_every_short_anchored_lane)
+{
+    for (size_t payload_size = 34; payload_size <= 63; ++payload_size)
+    {
+        std::string input(payload_size, 'x');
+        const std::string encoded = GaspardPetit_SIMD::encode(input);
+        std::string invalid = encoded;
+        std::string output(payload_size, '\0');
+        for (size_t position = 0; position < encoded.size(); ++position)
+        {
+            if (encoded[position] == '=')
+                continue;
+            invalid = encoded;
+            invalid[position] = '!';
+            EXPECT_EQ(BASE64_ERROR,
+                base64_decode(
+                    reinterpret_cast<const unsigned char*>(invalid.data()),
+                    invalid.size(),
+                    reinterpret_cast<unsigned char*>(output.data()), 0))
+                << "payload " << payload_size << ", position " << position;
+        }
     }
 }
 

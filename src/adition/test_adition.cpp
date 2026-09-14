@@ -5,6 +5,12 @@
 
 struct Adition
 {
+	static size_t decode_into(const std::string &base64, unsigned char *output)
+	{
+		CBase64Parser parser;
+		return parser.DecodeChunk(base64.c_str(), base64.size(), output);
+	}
+
 	CBase64Parser p;
 	std::string encode(const std::string &bytes)
 	{
@@ -29,3 +35,4 @@ struct Adition
 
 BASE64_REGISTER_ENCODER(Adition);
 BASE64_REGISTER_DECODER(Adition);
+BASE64_REGISTER_RAW_DECODER(Adition);

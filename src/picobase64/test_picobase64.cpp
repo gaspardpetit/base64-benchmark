@@ -5,6 +5,11 @@
 
 struct picobase64
 {
+	static size_t decode_into(const std::string& base64, unsigned char* output)
+	{
+		return DecodeChunk(base64.data(), base64.size(), output);
+	}
+
 	std::string encode(const std::string& bytes)
 	{
 		return b64encode(bytes);
@@ -18,3 +23,4 @@ struct picobase64
 
 BASE64_REGISTER_ENCODER(picobase64);
 BASE64_REGISTER_DECODER(picobase64);
+BASE64_REGISTER_RAW_DECODER(picobase64);

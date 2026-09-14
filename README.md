@@ -54,6 +54,8 @@ CMake fetches GoogleTest during configuration, so the initial configuration requ
 
 The executable first runs correctness tests, then benchmarks encoding and decoding for input sizes from 32 bytes to 64 KiB. It prints results and writes `encode-*.js` and `decode-*.js` reports to a `result/` directory relative to its working directory.
 
+Use `--raw-only` to benchmark implementations that can write directly into reusable caller-provided storage. This mode validates each encoder and decoder before timing, allocates output buffers once, and does not clear or resize them inside the timed loop. It writes `encode-raw-*.js` and `decode-raw-*.js` reports.
+
 For a CMake build, you can also run it through CTest:
 
 ```sh

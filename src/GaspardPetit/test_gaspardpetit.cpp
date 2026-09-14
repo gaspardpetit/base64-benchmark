@@ -9,6 +9,20 @@
 
 struct GaspardPetit
 {
+    static size_t encode_into(const std::string& bytes, char* output)
+    {
+        return base64_encode(
+            reinterpret_cast<const unsigned char*>(bytes.data()),
+            bytes.size(), output);
+    }
+
+    static size_t decode_into(const std::string& encoded, unsigned char* output)
+    {
+        return base64_decode(
+            reinterpret_cast<const unsigned char*>(encoded.data()),
+            encoded.size(), output, 1);
+    }
+
     static std::string encode(const std::string& bytes)
     {
         std::string result(((bytes.size() + 2U) / 3U) * 4U, '\0');
@@ -33,4 +47,6 @@ struct GaspardPetit
 };
 
 BASE64_REGISTER_ENCODER(GaspardPetit);
+BASE64_REGISTER_RAW_ENCODER(GaspardPetit);
 BASE64_REGISTER_DECODER(GaspardPetit);
+BASE64_REGISTER_RAW_DECODER(GaspardPetit);

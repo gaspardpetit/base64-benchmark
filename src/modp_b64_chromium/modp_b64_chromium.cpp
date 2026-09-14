@@ -62,6 +62,17 @@ struct B64_Adapt
 
 struct ModpB64Chromium
 {
+	static size_t encode_into(const std::string &bytes, char *output)
+	{
+		return modp_b64_encode_data(output, bytes.data(), bytes.size());
+	}
+
+	static size_t decode_into(const std::string &base64, unsigned char *output)
+	{
+		return modp_b64_decode((char*)output, base64.data(), base64.size(),
+			ModpDecodePolicy::kStrict);
+	}
+
 	std::string encode(const std::string &bytes)
 	{
 		return B64_Adapt::encode(modp_b64_encode, bytes);
@@ -74,4 +85,6 @@ struct ModpB64Chromium
 };
 
 BASE64_REGISTER_ENCODER(ModpB64Chromium);
+BASE64_REGISTER_RAW_ENCODER(ModpB64Chromium);
 BASE64_REGISTER_DECODER(ModpB64Chromium);
+BASE64_REGISTER_RAW_DECODER(ModpB64Chromium);
