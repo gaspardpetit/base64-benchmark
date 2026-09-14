@@ -38,8 +38,8 @@
     <script src="result/decode-msvc1951.js"></script>
     <script src="result/encode-clang15.js"></script>
     <script src="result/decode-clang15.js"></script>
-    <script src="result/encode-clang16-macos.js"></script>
-    <script src="result/decode-clang16-macos.js"></script>
+    <script src="result/encode-clang21-macos.js"></script>
+    <script src="result/decode-clang21-macos.js"></script>
     <script type="text/babel">
         //----------------------------------------------------------------------------- 
         function mergResult(encode, decode) {
@@ -211,15 +211,15 @@
             generateBarCharts("canvas_decode_encode_result_msvc1951", mergResultVal_msvc1951, "Decode + Encode Results (Lower is better)");
 
             // MacOS
-            generateResultTable("table_encode_result_clang16_macos", encode_result_clang16_macos);
-            generateBarCharts("canvas_encode_result_clang16_macos", encode_result_clang16_macos, "Encode Results (Lower is better)");
+            generateResultTable("table_encode_result_clang21_macos", encode_result_clang21_macos);
+            generateBarCharts("canvas_encode_result_clang21_macos", encode_result_clang21_macos, "Encode Results (Lower is better)");
 
-            generateResultTable("table_decode_result_clang16_macos", decode_result_clang16_macos);
-            generateBarCharts("canvas_decode_result_clang16_macos", decode_result_clang16_macos, "Decode Results (Lower is better)");
+            generateResultTable("table_decode_result_clang21_macos", decode_result_clang21_macos);
+            generateBarCharts("canvas_decode_result_clang21_macos", decode_result_clang21_macos, "Decode Results (Lower is better)");
 
-            let mergResultVal_clang16_macos = mergResult(encode_result_clang16_macos, decode_result_clang16_macos);
-            generateResultTable("table_decode_encode_result_clang16_macos", mergResultVal_clang16_macos);
-            generateBarCharts("canvas_decode_encode_result_clang16_macos", mergResultVal_clang16_macos, "Decode + Encode Results (Lower is better)");
+            let mergResultVal_clang21_macos = mergResult(encode_result_clang21_macos, decode_result_clang21_macos);
+            generateResultTable("table_decode_encode_result_clang21_macos", mergResultVal_clang21_macos);
+            generateBarCharts("canvas_decode_encode_result_clang21_macos", mergResultVal_clang21_macos, "Decode + Encode Results (Lower is better)");
 
 
 
@@ -329,7 +329,7 @@
     </div>
     <p>
     <h2>Encode Results</h2>
-    <table class="table table-striped" id="table_encode_result_clang16_macos">
+    <table class="table table-striped" id="table_encode_result_clang21_macos">
         <thead class="thead-dark">
             <tr></tr>
         </thead>
@@ -338,12 +338,12 @@
     </p>
 
     <p>
-        <canvas id="canvas_encode_result_clang16_macos"></canvas>
+        <canvas id="canvas_encode_result_clang21_macos"></canvas>
     </p>
 
     <p>
     <h2>Decode Results</h2>
-    <table class="table table-striped" id="table_decode_result_clang16_macos">
+    <table class="table table-striped" id="table_decode_result_clang21_macos">
         <thead class="thead-dark">
             <tr></tr>
         </thead>
@@ -352,12 +352,12 @@
     </p>
 
     <p>
-        <canvas id="canvas_decode_result_clang16_macos"></canvas>
+        <canvas id="canvas_decode_result_clang21_macos"></canvas>
     </p>
 
     <p>
     <h2>Encode + Decode Results</h2>
-    <table class="table table-striped" id="table_decode_encode_result_clang16_macos">
+    <table class="table table-striped" id="table_decode_encode_result_clang21_macos">
         <thead class="thead-dark">
             <tr></tr>
         </thead>
@@ -366,7 +366,7 @@
     </p>
 
     <p>
-        <canvas id="canvas_decode_encode_result_clang16_macos"></canvas>
+        <canvas id="canvas_decode_encode_result_clang21_macos"></canvas>
     </p>
 </div>
 
