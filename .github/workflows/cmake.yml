@@ -2,6 +2,7 @@ name: Build and publish
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -36,11 +37,15 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Test
+    - name: Unit tests
+      if: github.event_name == 'pull_request'
       working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{env.BUILD_TYPE}} --verbose
+      run: ctest -C ${{env.BUILD_TYPE}} -L unit --verbose
+
+    - name: Full benchmarks
+      if: github.event_name != 'pull_request'
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}} -L benchmark --verbose
 
   publish:
     name: Publish benchmark report

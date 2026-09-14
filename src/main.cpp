@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include <string_view>
 #include <vector>
 
 #ifdef _WIN32
@@ -24,6 +25,10 @@ static const std::vector<int> test_sizes{ 32, 64, 128, 256, 512, 1024, 2048, 409
 
 int main(int argc, char *argv[])
 {
+    bool testsOnly = false;
+    for (int i = 1; i < argc; ++i)
+        testsOnly |= std::string_view(argv[i]) == "--tests-only";
+
 #ifdef _WIN32
     // try to get more consistent results
     SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
@@ -37,6 +42,9 @@ int main(int argc, char *argv[])
         //cout << "Press enter to continue." << endl;
         //getchar();
     }
+
+    if (testsOnly)
+        return result;
 
     // Profile the encoders
     {

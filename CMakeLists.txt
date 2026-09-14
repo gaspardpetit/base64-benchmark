@@ -87,4 +87,8 @@ set_source_files_properties( ${C_SOURCES} PROPERTIES LANGUAGE C )
 add_executable(${PROJECT_NAME} ${CTR_SOURCES} ${C_SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE GTest::gtest GTest::gtest_main base64pp base64 etl::etl)
 
-add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
+add_test(NAME unit-tests COMMAND ${PROJECT_NAME} --tests-only)
+set_tests_properties(unit-tests PROPERTIES LABELS unit)
+
+add_test(NAME benchmarks COMMAND ${PROJECT_NAME})
+set_tests_properties(benchmarks PROPERTIES LABELS benchmark)
