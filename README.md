@@ -56,6 +56,8 @@ ctest --test-dir build -C Release --output-on-failure
 
 CTest runs the full benchmarks as well as the correctness tests, and writes reports under `build/result/`.
 
+Timings are average microseconds per conversion, including the implementation wrapper. Each case runs up to one million conversions or approximately 500 ms. The benchmark uses a monotonic clock and checks elapsed time between adaptive batches, doubling the batch size while batches take less than 1 ms, up to 65,536 conversions per batch. This amortizes clock-reading overhead; the time limit can be exceeded by the final batch. Earlier reports used a clock check after every conversion, so small-input timings are not directly comparable across the two measurement methods.
+
 ### Disclaimer
 
 Keep in mind that some implementations were slightly modified to have a common interface for the test framework.  In all cases, line breaks were omitted both for encoding and parsing. Also, although all implementations have been unit-tested, no analysis whatsoever has been made on error handling, so some slower implementation may actually be better at reporting malformed base64 strings for instance.
