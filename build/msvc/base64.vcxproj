@@ -63,6 +63,7 @@
     <Import Project="props\include cppcodec.props" />
     <Import Project="props\include boost.props" />
     <Import Project="props\include chromium_modp_b64.props" />
+    <Import Project="props\include etl.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -71,6 +72,7 @@
     <Import Project="props\include cppcodec.props" />
     <Import Project="props\include boost.props" />
     <Import Project="props\include chromium_modp_b64.props" />
+    <Import Project="props\include etl.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -79,6 +81,7 @@
     <Import Project="props\include cppcodec.props" />
     <Import Project="props\include boost.props" />
     <Import Project="props\include chromium_modp_b64.props" />
+    <Import Project="props\include etl.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -87,6 +90,7 @@
     <Import Project="props\include cppcodec.props" />
     <Import Project="props\include boost.props" />
     <Import Project="props\include chromium_modp_b64.props" />
+    <Import Project="props\include etl.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -195,6 +199,7 @@
     <ClCompile Include="..\..\src\base64-aklomp\test_base64-aklomp.cpp" />
     <ClCompile Include="..\..\src\base64-tl\test_base64-tl.cpp" />
     <ClCompile Include="..\..\src\base64pp\test_base64pp.cpp" />
+    <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit.cpp" />
     <ClCompile Include="..\..\src\Base64SurveyBenchmark.cpp" />
     <ClCompile Include="..\..\src\Base64SurveyRepoort.cpp" />
     <ClCompile Include="..\..\src\Base64SurveyRegistry.cpp" />
@@ -205,6 +210,7 @@
     <ClCompile Include="..\..\src\DaedalusAlpha\test_DaedalusAlpha.cpp" />
     <ClCompile Include="..\..\src\ElegantDice\ElegantDice.cpp" />
     <ClCompile Include="..\..\src\ElegantDice\test_ElegantDice.cpp" />
+    <ClCompile Include="..\..\src\etlcpp\test_etlcpp.cpp" />
     <ClCompile Include="..\..\src\gnome\test_gnome.cpp" />
     <ClCompile Include="..\..\src\IMUtility\test_polfosol_imutility.cpp" />
     <ClCompile Include="..\..\src\InternetSoftwareConsortium\InternetSoftwareConsortium.cpp" />
@@ -253,6 +259,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\libs\gaspardpetit\base64\base64.h" />
     <ClInclude Include="..\..\src\adition\adition.hpp" />
     <ClInclude Include="..\..\src\apache\apache.h" />
     <ClInclude Include="..\..\src\arduino\arduino.h" />

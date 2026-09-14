@@ -68,3 +68,9 @@
 [submodule "libs/boost/mp11"]
 	path = libs/boost/mp11
 	url = https://github.com/boostorg/mp11.git
+[submodule "libs/etl"]
+	path = libs/etl
+	url = https://github.com/ETLCPP/etl.git
+[submodule "libs/gaspardpetit/base64"]
+	path = libs/gaspardpetit/base64
+	url = https://github.com/gaspardpetit/base64.git

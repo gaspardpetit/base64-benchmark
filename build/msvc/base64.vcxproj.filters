@@ -95,6 +95,12 @@
     <Filter Include="impl\simdutf">
       <UniqueIdentifier>{5dba14bd-4424-4942-a008-c3bbaaaf4c7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="impl\EtlCpp">
+      <UniqueIdentifier>{87ac22b9-d069-49f2-aa20-10414e9f9857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="impl\GaspardPetit">
+      <UniqueIdentifier>{8310a643-ddb5-467a-8b62-b921e33fa5f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\adp-gmbh.ch\test_adp-gmbh.cpp">
@@ -235,8 +241,17 @@
     <ClCompile Include="..\..\src\simdutf\test_simdutf.cpp">
       <Filter>impl\simdutf</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\etlcpp\test_etlcpp.cpp">
+      <Filter>impl\EtlCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit.cpp">
+      <Filter>impl\GaspardPetit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\libs\gaspardpetit\base64\base64.h">
+      <Filter>impl\GaspardPetit</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\libcurl\curl_base64.h">
       <Filter>impl\LibCurl</Filter>
     </ClInclude>
