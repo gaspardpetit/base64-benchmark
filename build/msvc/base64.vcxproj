@@ -200,6 +200,23 @@
     <ClCompile Include="..\..\src\base64-tl\test_base64-tl.cpp" />
     <ClCompile Include="..\..\src\base64pp\test_base64pp.cpp" />
     <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit.cpp" />
+    <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit_avx2.cpp">
+      <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Full</Optimization>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GaspardPetit\test_gaspardpetit_simd.cpp">
+      <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\gaspardpetit\base64\base64.c">
+      <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
+      <PreprocessorDefinitions>base64_encode=gaspardpetit_simd_encode;base64_decode=gaspardpetit_simd_decode;base64_decode_unchecked=gaspardpetit_simd_decode_unchecked;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\libs\gaspardpetit\base64\base64_avx2.c">
+      <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
+      <EnableEnhancedInstructionSet Condition="'$(Platform)'=='x64'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\src\Base64SurveyBenchmark.cpp" />
     <ClCompile Include="..\..\src\Base64SurveyRepoort.cpp" />
     <ClCompile Include="..\..\src\Base64SurveyRegistry.cpp" />
