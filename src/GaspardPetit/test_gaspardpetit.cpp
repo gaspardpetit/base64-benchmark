@@ -1,8 +1,7 @@
 #include "../Base64SurveyRegistry.hpp"
 
-#ifndef GASPARDPETIT_COMPILED
+#define BASE64_DISABLE_HARDWARE
 #define BASE64_HEADER_ONLY
-#endif
 #include "../../libs/gaspardpetit/base64/base64.h"
 
 #include <string>
@@ -24,7 +23,7 @@ struct GaspardPetit
         const size_t size = base64_decode(
             reinterpret_cast<const unsigned char*>(encoded.data()),
             encoded.size(),
-            reinterpret_cast<unsigned char*>(result.data()));
+            reinterpret_cast<unsigned char*>(result.data()), false);
         if (size == BASE64_ERROR)
             return {};
         result.resize(size);

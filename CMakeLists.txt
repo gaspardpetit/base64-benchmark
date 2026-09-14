@@ -57,6 +57,7 @@ aux_source_directory(./src/tomykaria CTR_SOURCES)
 aux_source_directory(./src/stov-180947 CTR_SOURCES)
 aux_source_directory(./src/libb64/libb64/src C_SOURCES)
 list(APPEND CTR_SOURCES ./src/GaspardPetit/test_gaspardpetit.cpp)
+list(APPEND CTR_SOURCES ./src/GaspardPetit/test_gaspardpetit_simd.cpp)
 aux_source_directory(./src/picobase64 CTR_SOURCES)
 aux_source_directory(./src/simdutf CTR_SOURCES)
 aux_source_directory(./src/etlcpp CTR_SOURCES)
@@ -84,7 +85,9 @@ aux_source_directory(./src/boost CTR_SOURCES)
 set_source_files_properties( ${CTR_SOURCES} PROPERTIES LANGUAGE CXX )
 set_source_files_properties( ${C_SOURCES} PROPERTIES LANGUAGE C )
 
-# Compile only the AVX2 backend with AVX2 enabled; dispatch stays baseline x86-64.
+# Build GaspardPetit's compiled hardware-dispatch backend separately from the
+# forced-scalar benchmark candidate. Klomp exports colliding C names, so rename
+# the public entry points within this benchmark executable.
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND
    CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$" AND
    CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
@@ -93,17 +96,24 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND
     libs/gaspardpetit/base64/base64_avx2.c)
   set_source_files_properties(libs/gaspardpetit/base64/base64_avx2.c
     PROPERTIES COMPILE_OPTIONS "-mavx2")
-  # Klomp exports the same C names; isolate this library within the survey.
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND
+       CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm64|aarch64)$")
+  add_library(gaspardpetit_base64 STATIC
+    libs/gaspardpetit/base64/base64.c
+    libs/gaspardpetit/base64/base64_neon.c)
+endif()
+
+if(TARGET gaspardpetit_base64)
   set(gaspardpetit_symbols
     base64_encode=gaspardpetit_encode
-    base64_decode=gaspardpetit_decode)
+    base64_decode=gaspardpetit_decode
+    base64_decode_unchecked=gaspardpetit_decode_unchecked)
   target_compile_definitions(gaspardpetit_base64 PRIVATE ${gaspardpetit_symbols})
-  set_source_files_properties(src/GaspardPetit/test_gaspardpetit.cpp
-    PROPERTIES COMPILE_DEFINITIONS "GASPARDPETIT_COMPILED;${gaspardpetit_symbols}")
 endif()
 
 add_executable(${PROJECT_NAME} ${CTR_SOURCES} ${C_SOURCES})
 if(TARGET gaspardpetit_base64)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE GASPARDPETIT_SIMD)
   target_link_libraries(${PROJECT_NAME} PRIVATE gaspardpetit_base64)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE GTest::gtest GTest::gtest_main base64pp base64 etl::etl)
