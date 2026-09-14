@@ -15,4 +15,16 @@ map<string, Base64DecoderProc>& Base64SurveyRegistry::GetDecoders()
     return s_tests;
 }
 
+map<string, Base64RawEncoderProc>& Base64SurveyRegistry::GetRawEncoders()
+{
+    static map<string, Base64RawEncoderProc> s_tests;
+    return s_tests;
+}
+
+map<string, Base64RawDecoderProc>& Base64SurveyRegistry::GetRawDecoders()
+{
+    static map<string, Base64RawDecoderProc> s_tests;
+    return s_tests;
+}
+
 } // namespace b64_survey

@@ -26,8 +26,11 @@ static const std::vector<int> test_sizes{ 32, 64, 128, 256, 512, 1024, 2048, 409
 int main(int argc, char *argv[])
 {
     bool testsOnly = false;
-    for (int i = 1; i < argc; ++i)
+    bool rawOnly = false;
+    for (int i = 1; i < argc; ++i) {
         testsOnly |= std::string_view(argv[i]) == "--tests-only";
+        rawOnly |= std::string_view(argv[i]) == "--raw-only";
+    }
 
 #ifdef _WIN32
     // try to get more consistent results
@@ -37,7 +40,7 @@ int main(int argc, char *argv[])
 
     // Run smoke tests on each implementation
     int result = EXIT_SUCCESS;
-    {
+    if (!rawOnly) {
         result = Base64SurveyTests::RunTests(argc + 1, argv);
         //cout << "Press enter to continue." << endl;
         //getchar();
@@ -47,7 +50,7 @@ int main(int argc, char *argv[])
         return result;
 
     // Profile the encoders
-    {
+    if (!rawOnly) {
         cout << endl;
         cout << "*** PROFILING ENCODERS ***" << endl;
         cout << endl;
@@ -67,8 +70,49 @@ int main(int argc, char *argv[])
 
     cout << endl;
 
+    // Profile encoders that can write into reusable caller-provided storage.
+    if (rawOnly) {
+        cout << endl << "*** PROFILING RAW ENCODERS ***" << endl << endl;
+        MarkdownResultsDelegate liveProgress{ test_sizes };
+        BenchmarkResults rawEncodeResults =
+            Base64SurveyBenchmark::RunRawEncodeBenchmark(
+                test_sizes, liveProgress, 1000000, 500ms);
+
+        cout << endl << "*** SORTING RAW ENCODER RESULTS ***" << endl << endl;
+        MarkdownResultsDelegate sortedProgress{ test_sizes };
+        Base64SurveyReport::PrintSortedResults(rawEncodeResults,
+                                               sortedProgress);
+
+        std::string savedPath = Base64SurveyReport::DumpJsonResult(
+            "encode-raw", rawEncodeResults);
+        cout << "Saved raw encoder report to " + savedPath;
+    }
+
+    cout << endl;
+
+    // Profile decoders that can write into reusable caller-provided storage.
+    if (rawOnly) {
+        cout << endl << "*** PROFILING RAW DECODERS ***" << endl << endl;
+        MarkdownResultsDelegate liveProgress{ test_sizes };
+        BenchmarkResults rawDecodeResults = Base64SurveyBenchmark::RunRawDecodeBenchmark(
+            test_sizes, liveProgress, 1000000, 500ms);
+
+        cout << endl << "*** SORTING RAW DECODER RESULTS ***" << endl << endl;
+        MarkdownResultsDelegate sortedProgress{ test_sizes };
+        Base64SurveyReport::PrintSortedResults(rawDecodeResults, sortedProgress);
+
+        std::string savedPath = Base64SurveyReport::DumpJsonResult(
+            "decode-raw", rawDecodeResults);
+        cout << "Saved raw decoder report to " + savedPath;
+    }
+
+    cout << endl;
+
+    if (rawOnly)
+        return result;
+
     // Profile the decoders
-    {
+    if (!rawOnly) {
         cout << endl;
         cout << "*** PROFILING DECODERS ***" << endl;
         cout << endl;

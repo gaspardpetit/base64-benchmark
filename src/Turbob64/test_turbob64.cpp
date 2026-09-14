@@ -58,6 +58,18 @@ struct B64_Adapt
 
 struct Turbob64
 {
+	static size_t encode_into(const std::string &bytes, char *output)
+	{
+		return tb64v256enc((const unsigned char*)bytes.data(), bytes.size(),
+			(unsigned char*)output);
+	}
+
+	static size_t decode_into(const std::string &base64, unsigned char *output)
+	{
+		return tb64v256dec((const unsigned char*)base64.data(),
+			base64.size(), output);
+	}
+
 	std::string encode(const std::string &bytes)
 	{
 		return B64_Adapt::encode(tb64v256enc, bytes);
@@ -70,4 +82,6 @@ struct Turbob64
 };
 
 BASE64_REGISTER_ENCODER(Turbob64);
+BASE64_REGISTER_RAW_ENCODER(Turbob64);
 BASE64_REGISTER_DECODER(Turbob64);
+BASE64_REGISTER_RAW_DECODER(Turbob64);

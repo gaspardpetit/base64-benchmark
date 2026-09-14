@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <cctype>
 
 namespace b64_survey {
 using namespace std;
@@ -33,6 +34,9 @@ string Base64SurveyReport::DumpJsonResult(const string &name, BenchmarkResults &
 
     string path = resultDir + name + "-" + Base64SurveyReport::GetCompilerSuffix() + ".js";
     string varName = name + "_result_" + Base64SurveyReport::GetCompilerSuffix();
+    for (char &character : varName)
+        if (!std::isalnum(static_cast<unsigned char>(character)))
+            character = '_';
     filesystem::create_directory(resultDir);
 
     ofstream outFile(path);
