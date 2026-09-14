@@ -1,377 +1,123 @@
 <!doctype html>
 <html lang="en">
-<style type="text/css">
-</style>
-
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!--CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-
-    <!--JS-->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin="anonymous"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" crossorigin="anonymous"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" 
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" 
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
-        integrity="sha512-ubuT8Z88WxezgSqf3RLuNi5lmjstiJcyezx34yIU2gAHonIi27Na7atqzUZCOoY4CExaoFumzOsFQ2Ch+I/HCw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-
-    <title>BASE64 Result</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Base64 Benchmark Results</title>
+  <style>
+    :root {
+      color-scheme:light dark;--bg:#f5f7f9;--panel:#fff;--panel2:#edf1f4;
+      --line:#ccd4dc;--soft:#e5e9ed;--text:#17202a;--muted:#667382;
+      --accent:#087f5b;--accent-bg:rgba(8,127,91,.11);--accent-contrast:#fff;
+      --gold:#8a6700;--silver:#66717c;--bronze:#9a4e16;--best-bg:#fff3bf;
+      --header:#eef2f5;--hover:#f2f6f7;--tooltip:rgba(255,255,255,.96);--shadow:rgba(34,47,62,.10);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    }
+    @media(prefers-color-scheme:dark){:root{--bg:#090d12;--panel:#111720;--panel2:#171f2a;--line:#283342;--soft:#1d2632;--text:#eef3f8;--muted:#8f9bad;--accent:#63e6be;--accent-bg:rgba(99,230,190,.13);--accent-contrast:#07120f;--gold:#ffd43b;--silver:#ced4da;--bronze:#e5995c;--best-bg:#ffd43b0e;--header:#151c25;--hover:#18212c;--tooltip:rgba(9,13,18,.95);--shadow:rgba(0,0,0,.22)}}
+    *{box-sizing:border-box}html,body{height:100%;overflow:hidden}body{margin:0;min-width:320px;color:var(--text);background:
+      radial-gradient(circle at 12% -10%,rgba(99,230,190,.11),transparent 30rem),
+      radial-gradient(circle at 90% 0,rgba(116,192,252,.08),transparent 28rem),var(--bg)}
+    button,input{font:inherit} button{color:inherit}.shell{display:flex;width:min(1500px,calc(100% - 32px));height:100dvh;margin:auto;padding:42px 0 24px;flex-direction:column}
+    h1{margin:10px 0 8px;font-size:clamp(34px,5vw,58px);line-height:1;letter-spacing:-.045em}
+    .page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}.page-heading{min-width:0}
+    .intro{max-width:720px;margin:0;color:var(--muted);line-height:1.6}
+    .repo-link{color:var(--accent);text-decoration:none}.repo-link:hover{text-decoration:underline}
+    .platform-tabs{display:flex;flex:none;gap:6px;width:max-content;max-width:100%;padding:5px;overflow:auto;border:1px solid var(--line);border-radius:13px;background:var(--panel)}
+    button{border:0;cursor:pointer}.platform-button{min-width:125px;padding:10px 18px;border-radius:9px;background:transparent;color:var(--muted);font-weight:750}
+    .platform-button[aria-selected=true]{color:var(--accent-contrast);background:var(--accent)}
+    .dashboard{display:grid;min-height:0;grid-template-columns:176px minmax(0,1fr);gap:18px;margin-top:18px;flex:1}.content{display:flex;min-width:0;min-height:0;flex-direction:column}
+    .metric-tabs{position:sticky;top:18px;align-self:start;display:grid;gap:6px;padding:7px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+    .metric-button{padding:13px 14px;border-radius:9px;background:transparent;color:var(--muted);text-align:left;font-weight:750}
+    .metric-button[aria-selected=true]{color:var(--accent);background:var(--accent-bg)}.metric-button span{display:block;margin-top:3px;color:var(--muted);font-size:11px;font-weight:500}
+    .report-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+    .report-header h2{margin:0 0 5px;font-size:22px}.machine,.note{color:var(--muted);font-size:12px}
+    .segmented{display:inline-flex;gap:3px;padding:4px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+    .segment{padding:8px 14px;border-radius:7px;background:transparent;color:var(--muted);font-size:13px;font-weight:750}
+    .segment[aria-pressed=true]{color:var(--text);background:var(--panel2);box-shadow:0 1px 5px #0006}
+    .card-detail{margin-top:3px;color:var(--muted);font-size:12px}
+    .view-panel{display:flex;min-height:0;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:0 20px 55px var(--shadow);flex:1;flex-direction:column}#table-view,#graph-view{min-height:0;flex:1}#graph-view{overflow:auto}
+    .panel-bar,.graph-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line)}
+    #table-view{display:flex;min-height:0;flex-direction:column}.table-wrap{min-height:0;overflow:auto;flex:1}table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;font-variant-numeric:tabular-nums}
+    th,td{padding:10px 13px;border-bottom:1px solid var(--soft);text-align:right;white-space:nowrap}thead th{position:sticky;top:0;z-index:3;color:var(--muted);background:var(--header);font-size:11px;letter-spacing:.03em}
+    thead th.sortable{cursor:pointer}thead th.sortable:hover{color:var(--text)}thead th[aria-sort=ascending]:after{content:" ↑";color:var(--accent)}thead th[aria-sort=descending]:after{content:" ↓";color:var(--accent)}
+    th:first-child,td:first-child{position:sticky;left:0;z-index:2;width:48px;color:var(--muted);background:var(--panel);text-align:center}
+    th:nth-child(2),td:nth-child(2){position:sticky;left:48px;z-index:2;min-width:185px;background:var(--panel);text-align:left}thead th:first-child,thead th:nth-child(2){z-index:4;background:var(--header)}
+    tbody tr:hover>*{background:var(--hover)}tbody th{font-weight:700}td.best{color:var(--gold);background:var(--best-bg)}td.second{color:var(--silver)}td.third{color:var(--bronze)}
+    .graph-bar{flex-wrap:wrap;border:0;padding-bottom:0}.button-row{display:flex;flex-wrap:wrap;gap:6px}.small-button{padding:7px 11px;border:1px solid var(--line);border-radius:7px;background:var(--panel2);color:var(--muted);font-size:12px;font-weight:700}.small-button:hover{color:var(--text);border-color:#47566b}
+    .chart-shell{position:relative;min-height:480px;padding:12px 12px 2px}#chart{display:block;width:100%;height:480px}.empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);pointer-events:none}.crosshair{position:absolute;width:1px;background:var(--muted);opacity:.65;pointer-events:none}
+    .tooltip{position:absolute;z-index:6;min-width:175px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--tooltip);box-shadow:0 15px 40px var(--shadow);font-size:12px;pointer-events:none}.tooltip strong{display:block;margin-bottom:5px}.tip-row{display:flex;justify-content:space-between;gap:20px;line-height:1.65}.tip-name{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .implementation-picker{border-top:1px solid var(--line)}.implementation-heading{padding:13px 16px;color:var(--muted);font-size:12px;font-weight:750}.implementation-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:7px;padding:0 16px 16px}.implementation{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 9px;border:1px solid var(--soft);border-radius:7px;color:var(--muted);cursor:pointer;font-size:12px}.implementation:hover{color:var(--text);border-color:var(--line)}.implementation input{accent-color:var(--accent)}.implementation span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.swatch{width:9px;height:9px;flex:none;border-radius:50%}
+    [hidden]{display:none!important}
+    @media(max-width:800px){.shell{width:calc(100% - 20px);padding:24px 0 10px}.page-header{flex-direction:column;gap:16px}.dashboard{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}.platform-tabs{width:100%}.platform-button{min-width:0;flex:1;padding-inline:10px}.metric-tabs{position:static;display:flex;overflow:auto}.metric-button{min-width:0;flex:1;text-align:center}.metric-button span{display:none}.report-header,.panel-bar{align-items:flex-start;flex-direction:column}.chart-shell,#chart{min-height:390px;height:390px}}
+  </style>
 </head>
-
 <body>
-    <script src="result/encode-msvc1951.js"></script>
-    <script src="result/decode-msvc1951.js"></script>
-    <script src="result/encode-clang15.js"></script>
-    <script src="result/decode-clang15.js"></script>
-    <script src="result/encode-clang21-macos.js"></script>
-    <script src="result/decode-clang21-macos.js"></script>
-    <script type="text/babel">
-        //----------------------------------------------------------------------------- 
-        function mergResult(encode, decode) {
-            let result = [];
-
-            let findDecodeVal = (name) => {
-                for (let obj of decode) {
-                    if (obj.name == name) {
-                        return obj;
-                    }
-                }
-                return null;
-            }
-
-            let clone = JSON.parse(JSON.stringify(encode));
-
-
-            for (let obj of clone) {
-                let decodeVal = findDecodeVal(obj.name);
-                let nObject = obj
-                if (decodeVal === null) {
-                    console.log("can not find decoder for " + obj.name);
-                    continue;
-                }
-                for (let i in nObject.values) {
-                    nObject.values[i].time += decodeVal.values[i].time;
-                }
-                result.push(nObject)
-            }
-
-            return result;
-        }
-        //-----------------------------------------------------------------------------
-        function generateResultTable(tableName, result) {
-
-            if (result.length === 0) {
-                alert("invalid result")
-                return;
-            }
-
-            //sort results
-            result.sort((a, b) => {
-                let aSum = a.values.reduce((total, v) => {
-                    return v.time;
-                })
-
-                let bSum = b.values.reduce((total, v) => {
-                    return v.time;
-                })
-                return (aSum - bSum);
-            })
-
-            //render header
-            let lens = result[0].values;
-            let head = "<th>#</th><th>Implementation</th>";
-            head += lens.map((item) => {
-                return `<th>${item.len}</th>`
-            })
-            let thead = $(`#${tableName} thead tr`);
-            thead.html(head);
-
-            //render body
-            let body = result.map((item, index) => {
-                let val = `<tr><td>${index + 1}</td><th>${item.name}</th>`;
-                val += item.values.map((res) => {
-                    return `<td>${res.time.toFixed(3)}</td>`
-                })
-                val += `</tr>`
-                return val;
-            })
-
-            let tbody = $(`#${tableName} tbody`);
-            tbody.html(body);
-        }
-
-        //-----------------------------------------------------------------------------
-        function generateBarCharts(chartName, result, label) {
-
-            let colorPalate = ['#00ff00', '#43f800', '#5df200', '#71eb00', '#80e400', '#8cdd00', '#97d600',
-                '#a1cf00', '#a9c800', '#b1c100', '#b8ba00', '#beb300', '#c4ab00', '#c9a400',
-                '#ce9c00', '#d29500', '#d68d00', '#d98500', '#dc7c00', '#df7400', '#e16b00',
-                '#e26200', '#e45800', '#e54e00', '#e54300', '#e53800', '#e42b00', '#e21d00',
-                '#de0b00', '#d90000']
-            //
-            if (result.length == 0) {
-                return;
-            }
-
-            //make labels
-            let labels = result[0].values.map((obj) => {
-                return obj.len;
-            })
-
-            let datasets = result.map((o, index) => {
-                let obj = {}
-                obj.label = o.name;
-                obj.backgroundColor = colorPalate[index]
-                obj.borderColor = colorPalate[index]
-                obj.fill = false;
-                obj.tension = 0.25;
-                obj.data = o.values.map((o) => {
-                    return o.time;
-                })
-                return obj;
-            })
-
-            console.log(datasets)
-
-            var config = {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: datasets,
-                },
-                options: {
-                    responsive: true,
-                    title: {
-                        display: true,
-                        text: label,
-                    },
-                    interaction: {
-                        intersect: false,
-                        mode: 'index',
-                    },
-                    scales: {
-                        x: {
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Buffer Size (Byte)'
-                            }
-                        },
-                        y: {
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Time (Microseconds)'
-                            }
-                        }
-                    }
-                }
-            };
-
-            var ctx = $(`#${chartName}`)[0].getContext('2d');
-            new Chart(ctx, config);
-        }
-        //-----------------------------------------------------------------------------
-        window.onload = function () {
-            // Clang15
-            generateResultTable("table_encode_result_clang15", encode_result_clang15);
-            generateBarCharts("canvas_encode_result_clang15", encode_result_clang15, "Encode Results (Lower is better)");
-
-            generateResultTable("table_decode_result_clang15", decode_result_clang15);
-            generateBarCharts("canvas_decode_result_clang15", decode_result_clang15, "Decode Results (Lower is better)");
-
-            let mergResultVal_clang15 = mergResult(encode_result_clang15, decode_result_clang15);
-            generateResultTable("table_decode_encode_result_clang15", mergResultVal_clang15);
-            generateBarCharts("canvas_decode_encode_result_clang15", mergResultVal_clang15, "Decode + Encode Results (Lower is better)");
-
-            // MSVC 2022
-            generateResultTable("table_encode_result_msvc1951", encode_result_msvc1951);
-            generateBarCharts("canvas_encode_result_msvc1951", encode_result_msvc1951, "Encode Results (Lower is better)");
-
-            generateResultTable("table_decode_result_msvc1951", decode_result_msvc1951);
-            generateBarCharts("canvas_decode_result_msvc1951", decode_result_msvc1951, "Decode Results (Lower is better)");
-
-            let mergResultVal_msvc1951 = mergResult(encode_result_msvc1951, decode_result_msvc1951);
-            generateResultTable("table_decode_encode_result_msvc1951", mergResultVal_msvc1951);
-            generateBarCharts("canvas_decode_encode_result_msvc1951", mergResultVal_msvc1951, "Decode + Encode Results (Lower is better)");
-
-            // MacOS
-            generateResultTable("table_encode_result_clang21_macos", encode_result_clang21_macos);
-            generateBarCharts("canvas_encode_result_clang21_macos", encode_result_clang21_macos, "Encode Results (Lower is better)");
-
-            generateResultTable("table_decode_result_clang21_macos", decode_result_clang21_macos);
-            generateBarCharts("canvas_decode_result_clang21_macos", decode_result_clang21_macos, "Decode Results (Lower is better)");
-
-            let mergResultVal_clang21_macos = mergResult(encode_result_clang21_macos, decode_result_clang21_macos);
-            generateResultTable("table_decode_encode_result_clang21_macos", mergResultVal_clang21_macos);
-            generateBarCharts("canvas_decode_encode_result_clang21_macos", mergResultVal_clang21_macos, "Decode + Encode Results (Lower is better)");
-
-
-
-        };
-    </script>
-    <!---Body start -->
-    <div class="container">
-        <div class="py-5 text-center">
-            <h1>
-                Benchmark results (Clang 15 / Ubuntu AMD Ryzen 7 5700G)
-            </h1>
-        </div>
-        <p>
-        <h2>Encode Results</h2>
-        <table class="table table-striped" id="table_encode_result_clang15">
-            <thead class="thead-dark">
-                <tr></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        </p>
-
-        <p>
-            <canvas id="canvas_encode_result_clang15"></canvas>
-        </p>
-
-        <p>
-        <h2>Decode Results</h2>
-        <table class="table table-striped" id="table_decode_result_clang15">
-            <thead class="thead-dark">
-                <tr></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        </p>
-
-        <p>
-            <canvas id="canvas_decode_result_clang15"></canvas>
-        </p>
-
-        <p>
-        <h2>Encode + Decode Results</h2>
-        <table class="table table-striped" id="table_decode_encode_result_clang15">
-            <thead class="thead-dark">
-                <tr></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        </p>
-
-        <p>
-            <canvas id="canvas_decode_encode_result_clang15"></canvas>
-        </p>
-
-        <div class="py-5 text-center">
-            <h1>
-                Benchmark results (MSVC 19.51 / Intel i9-13900K @ 3.0GHz)
-            </h1>
-        </div>
-        <p>
-        <h2>Encode Results</h2>
-        <table class="table table-striped" id="table_encode_result_msvc1951">
-            <thead class="thead-dark">
-                <tr></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        </p>
-
-        <p>
-            <canvas id="canvas_encode_result_msvc1951"></canvas>
-        </p>
-
-        <p>
-        <h2>Decode Results</h2>
-        <table class="table table-striped" id="table_decode_result_msvc1951">
-            <thead class="thead-dark">
-                <tr></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        </p>
-
-        <p>
-            <canvas id="canvas_decode_result_msvc1951"></canvas>
-        </p>
-
-        <p>
-        <h2>Encode + Decode Results</h2>
-        <table class="table table-striped" id="table_decode_encode_result_msvc1951">
-            <thead class="thead-dark">
-                <tr></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        </p>
-
-        <p>
-            <canvas id="canvas_decode_encode_result_msvc1951"></canvas>
-        </p>
-
-
-    <div class="py-5 text-center">
-        <h1>
-            Benchmark results (AppleClang 21 / MacBook Air M4)
-        </h1>
+  <div id="runtime-error" hidden style="margin:16px;padding:12px;border:1px solid #ff8787;color:#ff8787"></div>
+  <script>addEventListener("error",event=>{const box=document.querySelector("#runtime-error");box.hidden=false;box.textContent=`Report error: ${event.message || event.type}`})</script>
+  <main class="shell">
+    <header class="page-header"><div class="page-heading"><h1>Base64 benchmark results</h1><p class="intro">Encoding and decoding times across implementations, platforms, and input sizes. Lower values are better. <a class="repo-link" href="https://github.com/gaspardpetit/base64-benchmark">View repository on GitHub</a>.</p></div><nav id="platform-tabs" class="platform-tabs" aria-label="Platform" role="tablist"></nav></header>
+    <div class="dashboard">
+      <nav id="metric-tabs" class="metric-tabs" aria-label="Operation"></nav>
+      <section class="content">
+        <section class="view-panel">
+          <header class="report-header"><div><h2 id="report-title"></h2><div id="machine" class="machine"></div></div><div class="segmented" aria-label="View"><button class="segment" data-view="table" aria-pressed="true">Table</button><button class="segment" data-view="graph" aria-pressed="false">Graph</button></div></header>
+          <div id="table-view"><div class="panel-bar"><strong>Results</strong><span class="note">Microseconds · select a column heading to sort</span></div><div class="table-wrap"><table id="results-table"><thead></thead><tbody></tbody></table></div></div>
+          <div id="graph-view" hidden>
+            <div class="graph-bar"><div class="button-row"><button data-top="5" class="small-button">Top 5</button><button data-top="10" class="small-button">Top 10</button><button data-top="15" class="small-button">Top 15</button><button id="select-all" class="small-button">Select all</button><button id="clear" class="small-button">Clear</button></div><div class="segmented" aria-label="Scale"><button class="segment" data-scale="log" aria-pressed="true">Log scale</button><button class="segment" data-scale="linear" aria-pressed="false">Linear</button></div></div>
+            <div id="chart-shell" class="chart-shell"><canvas id="chart"></canvas><div id="crosshair" class="crosshair" hidden></div><div id="empty" class="empty" hidden>Select at least one implementation.</div><div id="tooltip" class="tooltip" hidden></div></div>
+            <section class="implementation-picker"><div id="implementation-summary" class="implementation-heading">Implementations</div><div id="implementation-list" class="implementation-list"></div></section>
+          </div>
+        </section>
+      </section>
     </div>
-    <p>
-    <h2>Encode Results</h2>
-    <table class="table table-striped" id="table_encode_result_clang21_macos">
-        <thead class="thead-dark">
-            <tr></tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    </p>
+  </main>
 
-    <p>
-        <canvas id="canvas_encode_result_clang21_macos"></canvas>
-    </p>
+  <script src="result/encode-msvc1951.js"></script><script src="result/decode-msvc1951.js"></script>
+  <script src="result/encode-clang15.js"></script><script src="result/decode-clang15.js"></script>
+  <script src="result/encode-clang21-macos.js"></script><script src="result/decode-clang21-macos.js"></script>
+  <script>
+  "use strict";
+  const platforms={ubuntu:{label:"Linux",title:"Clang 15",machine:"Ubuntu · AMD Ryzen 7 5700G",encode:encode_result_clang15,decode:decode_result_clang15},windows:{label:"Windows",title:"MSVC 19.51",machine:"Windows · Intel Core i9-13900K @ 3.0 GHz",encode:encode_result_msvc1951,decode:decode_result_msvc1951},macos:{label:"macOS",title:"AppleClang 21",machine:"macOS · MacBook Air M4",encode:encode_result_clang21_macos,decode:decode_result_clang21_macos}};
+  const metrics={encode:{label:"Encode",detail:"Binary to Base64"},decode:{label:"Decode",detail:"Base64 to binary"},both:{label:"Combined",detail:"Encode + decode"}};
+  const colors=["#63e6be","#74c0fc","#ffd43b","#da77f2","#ff8787","#a9e34b","#ffa94d","#91a7ff","#f783ac","#66d9e8","#c0eb75","#b197fc","#ffec99","#8ce99a","#e599f7","#ffc078"];
+  const state={platform:"windows",metric:"both",view:"table",scale:"log",sort:-1,direction:1,selections:new Map()};
+  const $=selector=>document.querySelector(selector);
 
-    <p>
-    <h2>Decode Results</h2>
-    <table class="table table-striped" id="table_decode_result_clang21_macos">
-        <thead class="thead-dark">
-            <tr></tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    </p>
+  function combined(encode,decode){const dec=new Map(decode.map(x=>[x.name,x]));return encode.flatMap(x=>{const match=dec.get(x.name);if(!match)return[];const values=new Map(match.values.map(v=>[v.len,v.time]));return[{name:x.name,values:x.values.flatMap(v=>values.has(v.len)?[{len:v.len,time:v.time+values.get(v.len)}]:[])}]}).filter(x=>x.values.length)}
+  function results(){const p=platforms[state.platform];const source=state.metric==="both"?combined(p.encode,p.decode):p[state.metric];return source.map(x=>({name:x.name,values:x.values.map(v=>({...v}))}))}
+  const score=item=>item.values.at(-1)?.time??Infinity;
+  const topNames=(data,n=10)=>new Set([...data].sort((a,b)=>score(a)-score(b)).slice(0,n).map(x=>x.name));
+  const key=()=>`${state.platform}/${state.metric}`;
+  function selected(data){if(!state.selections.has(key()))state.selections.set(key(),topNames(data));return state.selections.get(key())}
+  const payload=n=>n>=1024?`${n/1024} KiB`:`${n} B`;
+  const time=n=>n<.1?n.toFixed(4):n<10?n.toFixed(3):n.toFixed(2);
+  function readHash(){const[p,m,v]=location.hash.slice(1).split("/");if(platforms[p])state.platform=p;if(metrics[m])state.metric=m;if(["table","graph"].includes(v))state.view=v}
+  function writeHash(){const hash=`#${state.platform}/${state.metric}/${state.view}`;if(location.hash!==hash)history.replaceState(null,"",hash)}
 
-    <p>
-        <canvas id="canvas_decode_result_clang21_macos"></canvas>
-    </p>
+  function navigation(){
+    $("#platform-tabs").replaceChildren(...Object.entries(platforms).map(([id,p])=>{const b=document.createElement("button");b.className="platform-button";b.textContent=p.label;b.setAttribute("role","tab");b.setAttribute("aria-selected",id===state.platform);b.onclick=()=>{state.platform=id;state.sort=-1;render()};return b}));
+    $("#metric-tabs").replaceChildren(...Object.entries(metrics).map(([id,m])=>{const b=document.createElement("button");b.className="metric-button";b.setAttribute("aria-selected",id===state.metric);b.append(m.label);const s=document.createElement("span");s.textContent=m.detail;b.append(s);b.onclick=()=>{state.metric=id;state.sort=-1;render()};return b}));
+  }
+  function header(){const p=platforms[state.platform];$("#report-title").textContent=`${p.title} · ${metrics[state.metric].label}`;$("#machine").textContent=p.machine;document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===state.view));$("#table-view").hidden=state.view!=="table";$("#graph-view").hidden=state.view!=="graph"}
 
-    <p>
-    <h2>Encode + Decode Results</h2>
-    <table class="table table-striped" id="table_decode_encode_result_clang21_macos">
-        <thead class="thead-dark">
-            <tr></tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    </p>
+  function renderTable(data){if(!data.length)return;const sizes=data[0].values.map(v=>v.len);if(state.sort<0&&state.sort!==-2)state.sort=sizes.length-1;const ranks=sizes.map((_,i)=>[...data].sort((a,b)=>a.values[i].time-b.values[i].time).map(x=>x.name));const ordered=[...data].sort((a,b)=>state.direction*(state.sort===-2?a.name.localeCompare(b.name):a.values[state.sort].time-b.values[state.sort].time));
+    const hr=document.createElement("tr"),rank=document.createElement("th");rank.textContent="#";hr.append(rank);const name=document.createElement("th");name.textContent="Implementation";name.className="sortable";name.setAttribute("aria-sort",state.sort===-2?(state.direction===1?"ascending":"descending"):"none");name.onclick=()=>sortBy(-2);hr.append(name);sizes.forEach((n,i)=>{const th=document.createElement("th");th.textContent=payload(n);th.className="sortable";th.setAttribute("aria-sort",state.sort===i?(state.direction===1?"ascending":"descending"):"none");th.onclick=()=>sortBy(i);hr.append(th)});$("#results-table thead").replaceChildren(hr);
+    $("#results-table tbody").replaceChildren(...ordered.map((item,row)=>{const tr=document.createElement("tr"),r=document.createElement("td"),n=document.createElement("th");r.textContent=row+1;n.textContent=item.name;n.scope="row";tr.append(r,n);item.values.forEach((v,i)=>{const td=document.createElement("td");td.textContent=time(v.time);const place=ranks[i].indexOf(item.name);if(place===0)td.className="best";if(place===1)td.className="second";if(place===2)td.className="third";tr.append(td)});return tr}))}
+  function sortBy(column){if(state.sort===column)state.direction*=-1;else{state.sort=column;state.direction=1}renderTable(results())}
+  function color(name,data){const ordered=[...data].sort((a,b)=>score(a)-score(b));return colors[ordered.findIndex(x=>x.name===name)%colors.length]}
 
-    <p>
-        <canvas id="canvas_decode_encode_result_clang21_macos"></canvas>
-    </p>
-</div>
+  function implementationList(data){const choice=selected(data),ordered=[...data].sort((a,b)=>score(a)-score(b));$("#implementation-list").replaceChildren(...ordered.map(item=>{const label=document.createElement("label");label.className="implementation";const input=document.createElement("input");input.type="checkbox";input.checked=choice.has(item.name);input.onchange=()=>{input.checked?choice.add(item.name):choice.delete(item.name);graph(data)};const swatch=document.createElement("span");swatch.className="swatch";swatch.style.background=color(item.name,data);const name=document.createElement("span");name.textContent=item.name;label.append(input,swatch,name);return label}));$("#implementation-summary").textContent=`Implementations · ${choice.size} of ${data.length} selected`}
+  function ticks(min,max,count=5){if(max<=min)return[min];const rough=(max-min)/count,power=10**Math.floor(Math.log10(rough)),unit=rough/power,step=(unit>=5?10:unit>=2?5:unit>=1?2:1)*power,start=Math.floor(min/step)*step,out=[];for(let n=start;n<=max+step;n+=step)if(n>=min)out.push(n);return out}
+  function graph(data){implementationList(data);const series=data.filter(x=>selected(data).has(x.name));$("#empty").hidden=series.length!==0;$("#crosshair").hidden=true;document.querySelectorAll("[data-scale]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.scale===state.scale));const canvas=$("#chart"),rect=canvas.getBoundingClientRect(),ratio=devicePixelRatio||1;canvas.width=Math.max(1,Math.round(rect.width*ratio));canvas.height=Math.max(1,Math.round(rect.height*ratio));const ctx=canvas.getContext("2d");ctx.scale(ratio,ratio);const w=rect.width,h=rect.height;ctx.clearRect(0,0,w,h);if(!series.length)return;
+    const sizes=series[0].values.map(v=>v.len),all=series.flatMap(x=>x.values.map(v=>v.time)),rawMin=Math.min(...all),rawMax=Math.max(...all),pad={left:70,right:20,top:22,bottom:50},pw=w-pad.left-pad.right,ph=h-pad.top-pad.bottom,transform=n=>state.scale==="log"?Math.log10(n):n;let min=transform(rawMin),max=transform(rawMax),margin=Math.max((max-min)*.08,state.scale==="log"?.04:.001);min-=margin;max+=margin;const x=i=>pad.left+(sizes.length===1?pw/2:i*pw/(sizes.length-1)),y=n=>pad.top+(max-transform(n))/(max-min)*ph;
+    const styles=getComputedStyle(document.documentElement);ctx.lineWidth=1;ctx.font="11px system-ui,sans-serif";ctx.fillStyle=styles.getPropertyValue("--muted");ctx.strokeStyle=styles.getPropertyValue("--line");ctx.textAlign="right";ctx.textBaseline="middle";const marks=state.scale==="log"?ticks(min,max).map(n=>10**n):ticks(rawMin,rawMax);marks.forEach(mark=>{const py=y(mark);if(py<pad.top||py>h-pad.bottom)return;ctx.beginPath();ctx.moveTo(pad.left,py);ctx.lineTo(w-pad.right,py);ctx.stroke();ctx.fillText(time(mark),pad.left-10,py)});ctx.textAlign="center";ctx.textBaseline="top";sizes.forEach((n,i)=>{const px=x(i);ctx.beginPath();ctx.moveTo(px,pad.top);ctx.lineTo(px,h-pad.bottom);ctx.stroke();ctx.fillText(payload(n),px,h-pad.bottom+12)});ctx.save();ctx.translate(15,pad.top+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText(`Time (µs${state.scale==="log"?", log scale":""})`,0,0);ctx.restore();
+    series.sort((a,b)=>score(b)-score(a)).forEach(item=>{const c=color(item.name,data);ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=2;ctx.beginPath();item.values.forEach((v,i)=>i?ctx.lineTo(x(i),y(v.time)):ctx.moveTo(x(i),y(v.time)));ctx.stroke();item.values.forEach((v,i)=>{ctx.beginPath();ctx.arc(x(i),y(v.time),2.5,0,Math.PI*2);ctx.fill()})});canvas.onmousemove=e=>tooltip(e,series,data,sizes,x);canvas.onmouseleave=()=>{$("#tooltip").hidden=true;$("#crosshair").hidden=true}}
+  function tooltip(event,series,data,sizes,x){const canvas=$("#chart"),shell=$("#chart-shell"),bounds=canvas.getBoundingClientRect(),local=event.clientX-bounds.left;let index=0;for(let i=1;i<sizes.length;i++)if(Math.abs(local-x(i))<Math.abs(local-x(index)))index=i;const guide=$("#crosshair");guide.hidden=false;guide.style.left=`${canvas.offsetLeft+x(index)}px`;guide.style.top=`${canvas.offsetTop+22}px`;guide.style.height=`${canvas.clientHeight-72}px`;const rows=[...series].sort((a,b)=>a.values[index].time-b.values[index].time),tip=$("#tooltip");tip.replaceChildren();const title=document.createElement("strong");title.textContent=payload(sizes[index]);tip.append(title);rows.slice(0,12).forEach(item=>{const row=document.createElement("div"),name=document.createElement("span"),value=document.createElement("span");row.className="tip-row";name.className="tip-name";name.style.color=color(item.name,data);name.textContent=item.name;value.textContent=`${time(item.values[index].time)} µs`;row.append(name,value);tip.append(row)});if(rows.length>12){const more=document.createElement("div");more.className="card-detail";more.textContent=`+ ${rows.length-12} more selected`;tip.append(more)}tip.hidden=false;const box=shell.getBoundingClientRect(),left=Math.min(event.clientX-box.left+14,box.width-tip.offsetWidth-8),top=Math.max(8,event.clientY-box.top-tip.offsetHeight/2);tip.style.left=`${left}px`;tip.style.top=`${Math.min(top,box.height-tip.offsetHeight-8)}px`}
+  function choose(kind,count){const data=results(),choice=selected(data);choice.clear();if(kind==="top")topNames(data,count).forEach(n=>choice.add(n));if(kind==="all")data.forEach(x=>choice.add(x.name));graph(data)}
+  function render(){const data=results();navigation();header(data);renderTable(data);if(state.view==="graph")requestAnimationFrame(()=>graph(data));writeHash()}
 
-
-<!---Body end -->
+  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{state.view=b.dataset.view;render()});document.querySelectorAll("[data-scale]").forEach(b=>b.onclick=()=>{state.scale=b.dataset.scale;graph(results())});document.querySelectorAll("[data-top]").forEach(b=>b.onclick=()=>choose("top",Number(b.dataset.top)));$("#select-all").onclick=()=>choose("all");$("#clear").onclick=()=>choose("clear");new ResizeObserver(()=>{if(state.view==="graph")requestAnimationFrame(()=>graph(results()))}).observe($("#chart-shell"));matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if(state.view==="graph")graph(results())});addEventListener("hashchange",()=>{readHash();render()});readHash();render();
+  </script>
 </body>
-
 </html>
