@@ -28,6 +28,14 @@ add_subdirectory(./libs/base64pp)
 add_subdirectory(./libs/base64-aklomp)
 add_subdirectory(./libs/etl)
 
+# TurboBase64 defaults to checking only a subset of SIMD blocks. Enable its
+# full validation path so decoder benchmarks compare equivalent checked APIs.
+foreach(turbo_object _b64_scalar _b64_v128 _b64_avx _b64_v256 _b64_v512)
+  if(TARGET ${turbo_object})
+    target_compile_definitions(${turbo_object} PRIVATE B64CHECK)
+  endif()
+endforeach()
+
 include_directories(libs)
 
 aux_source_directory(./src/ CTR_SOURCES)
@@ -57,6 +65,43 @@ aux_source_directory(./src/tomykaria CTR_SOURCES)
 aux_source_directory(./src/stov-180947 CTR_SOURCES)
 aux_source_directory(./src/libb64/libb64/src C_SOURCES)
 list(APPEND CTR_SOURCES ./src/GaspardPetit/test_gaspardpetit.cpp)
+if((MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8) OR
+   (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND
+    CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$" AND
+    CMAKE_C_COMPILER_ID MATCHES "GNU|Clang"))
+  add_library(gaspardpetit_simd STATIC
+    ./libs/gaspardpetit/base64/base64.c
+    ./libs/gaspardpetit/base64/base64_avx2.c
+  )
+  if(MSVC)
+    set_source_files_properties(./libs/gaspardpetit/base64/base64_avx2.c
+      PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
+  else()
+    set_source_files_properties(./libs/gaspardpetit/base64/base64_avx2.c
+      PROPERTIES COMPILE_OPTIONS "-mavx2")
+  endif()
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND
+       CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm64|aarch64)$")
+  add_library(gaspardpetit_simd STATIC
+    ./libs/gaspardpetit/base64/base64.c
+    ./libs/gaspardpetit/base64/base64_neon.c
+  )
+endif()
+if(TARGET gaspardpetit_simd)
+  target_compile_definitions(gaspardpetit_simd PRIVATE
+    base64_encode=gaspardpetit_simd_encode
+    base64_decode=gaspardpetit_simd_decode
+    base64_decode_unchecked=gaspardpetit_simd_decode_unchecked
+  )
+  list(APPEND CTR_SOURCES
+    ./src/GaspardPetit/test_gaspardpetit_simd.cpp
+  )
+endif()
+if(MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+  list(APPEND CTR_SOURCES
+    ./src/GaspardPetit/test_gaspardpetit_avx2.cpp
+  )
+endif()
 aux_source_directory(./src/picobase64 CTR_SOURCES)
 aux_source_directory(./src/simdutf CTR_SOURCES)
 aux_source_directory(./src/etlcpp CTR_SOURCES)
@@ -84,27 +129,9 @@ aux_source_directory(./src/boost CTR_SOURCES)
 set_source_files_properties( ${CTR_SOURCES} PROPERTIES LANGUAGE CXX )
 set_source_files_properties( ${C_SOURCES} PROPERTIES LANGUAGE C )
 
-# Compile only the AVX2 backend with AVX2 enabled; dispatch stays baseline x86-64.
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND
-   CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$" AND
-   CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
-  add_library(gaspardpetit_base64 STATIC
-    libs/gaspardpetit/base64/base64.c
-    libs/gaspardpetit/base64/base64_avx2.c)
-  set_source_files_properties(libs/gaspardpetit/base64/base64_avx2.c
-    PROPERTIES COMPILE_OPTIONS "-mavx2")
-  # Klomp exports the same C names; isolate this library within the survey.
-  set(gaspardpetit_symbols
-    base64_encode=gaspardpetit_encode
-    base64_decode=gaspardpetit_decode)
-  target_compile_definitions(gaspardpetit_base64 PRIVATE ${gaspardpetit_symbols})
-  set_source_files_properties(src/GaspardPetit/test_gaspardpetit.cpp
-    PROPERTIES COMPILE_DEFINITIONS "GASPARDPETIT_COMPILED;${gaspardpetit_symbols}")
-endif()
-
 add_executable(${PROJECT_NAME} ${CTR_SOURCES} ${C_SOURCES})
-if(TARGET gaspardpetit_base64)
-  target_link_libraries(${PROJECT_NAME} PRIVATE gaspardpetit_base64)
+if(TARGET gaspardpetit_simd)
+  target_link_libraries(${PROJECT_NAME} PRIVATE gaspardpetit_simd)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE GTest::gtest GTest::gtest_main base64pp base64 etl::etl)
 

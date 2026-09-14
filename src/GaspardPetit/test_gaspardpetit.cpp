@@ -24,7 +24,7 @@ struct GaspardPetit
         const size_t size = base64_decode(
             reinterpret_cast<const unsigned char*>(encoded.data()),
             encoded.size(),
-            reinterpret_cast<unsigned char*>(result.data()));
+            reinterpret_cast<unsigned char*>(result.data()), 1);
         if (size == BASE64_ERROR)
             return {};
         result.resize(size);
