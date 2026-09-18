@@ -43,6 +43,9 @@ struct simdutfb64
   }
 };
 
+// simdutf omits its fallback implementation on targets with an always-runnable
+// backend, including ARM64. There is no scalar implementation to benchmark there.
+#if !defined(__aarch64__) && !defined(_M_ARM64)
 struct simdutf_scalar
 {
   static const simdutf::implementation& implementation()
@@ -89,11 +92,15 @@ struct simdutf_scalar
   }
 };
 
+#endif
+
 BASE64_REGISTER_ENCODER_NAMED(simdutfb64, "simdutf-9.2.0");
 BASE64_REGISTER_DECODER_NAMED(simdutfb64, "simdutf-9.2.0");
 BASE64_REGISTER_RAW_ENCODER_NAMED(simdutfb64, "simdutf-9.2.0");
 BASE64_REGISTER_RAW_DECODER_NAMED(simdutfb64, "simdutf-9.2.0");
+#if !defined(__aarch64__) && !defined(_M_ARM64)
 BASE64_REGISTER_ENCODER_NAMED(simdutf_scalar, "simdutf-scalar-9.2.0");
 BASE64_REGISTER_DECODER_NAMED(simdutf_scalar, "simdutf-scalar-9.2.0");
 BASE64_REGISTER_RAW_ENCODER_NAMED(simdutf_scalar, "simdutf-scalar-9.2.0");
 BASE64_REGISTER_RAW_DECODER_NAMED(simdutf_scalar, "simdutf-scalar-9.2.0");
+#endif

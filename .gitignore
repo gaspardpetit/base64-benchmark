@@ -47,3 +47,11 @@ CTestTestfile.cmake
 .#*
 build/msvc/msvc.build/**
 build/msvc/result/**
+
+# Local macOS CMake build tree (keep tracked build/msvc project files)
+/build/_deps/
+/build/base64-benchmark
+/build/libs/
+
+# Benchmark reports emitted by local macOS runs; published reports live below result/result/.
+/result/*.js
