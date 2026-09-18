@@ -1,6 +1,17 @@
 #include "../Base64SurveyRegistry.hpp"
 #include <gtest/gtest.h>
+
+// This revision of picobase64 uses GCC's prefetch builtin directly. Prefetching
+// is only a performance hint, so omit it when compiling with native MSVC.
+#if defined(_MSC_VER) && !defined(__clang__)
+#define __builtin_prefetch(address, rw, locality) ((void)0)
+#define BASE64_SURVEY_UNDEFINE_BUILTIN_PREFETCH
+#endif
 #include "../libs/picobase64/picobase64.h"
+#ifdef BASE64_SURVEY_UNDEFINE_BUILTIN_PREFETCH
+#undef BASE64_SURVEY_UNDEFINE_BUILTIN_PREFETCH
+#undef __builtin_prefetch
+#endif
 
 
 struct picobase64
