@@ -18,9 +18,9 @@ struct GaspardPetit
 
     static size_t decode_into(const std::string& encoded, unsigned char* output)
     {
-        return base64_decode(
+        return base64url_decode(
             reinterpret_cast<const unsigned char*>(encoded.data()),
-            encoded.size(), output, 1);
+            encoded.size(), output);
     }
 
     static std::string encode(const std::string& bytes)
@@ -35,10 +35,10 @@ struct GaspardPetit
     static std::string decode(const std::string& encoded)
     {
         std::string result(base64_decoded_max_size(encoded.size()), '\0');
-        const size_t size = base64_decode(
+        const size_t size = base64url_decode(
             reinterpret_cast<const unsigned char*>(encoded.data()),
             encoded.size(),
-            reinterpret_cast<unsigned char*>(result.data()), 1);
+            reinterpret_cast<unsigned char*>(result.data()));
         if (size == BASE64_ERROR)
             return {};
         result.resize(size);

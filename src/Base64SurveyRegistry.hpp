@@ -68,18 +68,30 @@ struct Base64SurveyRegistry
 	};
 };
 
-#define BASE64_REGISTER_ENCODER(TEST_TYPE)\
-b64_survey::Base64SurveyRegistry::RegisterEncodeTest<TEST_TYPE> register_##TEST_TYPE##_encode(#TEST_TYPE);\
+#define BASE64_REGISTER_ENCODER_NAMED(TEST_TYPE, DISPLAY_NAME)\
+b64_survey::Base64SurveyRegistry::RegisterEncodeTest<TEST_TYPE> register_##TEST_TYPE##_encode(DISPLAY_NAME);\
 BASE64_REGISTER_ENCODER_TESTS(TEST_TYPE)
 
-#define BASE64_REGISTER_DECODER(TEST_TYPE)\
-b64_survey::Base64SurveyRegistry::RegisterDecodeTest<TEST_TYPE> register_##TEST_TYPE##_decode(#TEST_TYPE);\
+#define BASE64_REGISTER_ENCODER(TEST_TYPE)\
+BASE64_REGISTER_ENCODER_NAMED(TEST_TYPE, #TEST_TYPE)
+
+#define BASE64_REGISTER_DECODER_NAMED(TEST_TYPE, DISPLAY_NAME)\
+b64_survey::Base64SurveyRegistry::RegisterDecodeTest<TEST_TYPE> register_##TEST_TYPE##_decode(DISPLAY_NAME);\
 BASE64_REGISTER_DECODER_TESTS(TEST_TYPE)
 
+#define BASE64_REGISTER_DECODER(TEST_TYPE)\
+BASE64_REGISTER_DECODER_NAMED(TEST_TYPE, #TEST_TYPE)
+
+#define BASE64_REGISTER_RAW_ENCODER_NAMED(TEST_TYPE, DISPLAY_NAME)\
+b64_survey::Base64SurveyRegistry::RegisterRawEncodeTest<TEST_TYPE> register_##TEST_TYPE##_raw_encode(DISPLAY_NAME)
+
 #define BASE64_REGISTER_RAW_ENCODER(TEST_TYPE)\
-b64_survey::Base64SurveyRegistry::RegisterRawEncodeTest<TEST_TYPE> register_##TEST_TYPE##_raw_encode(#TEST_TYPE)
+BASE64_REGISTER_RAW_ENCODER_NAMED(TEST_TYPE, #TEST_TYPE)
+
+#define BASE64_REGISTER_RAW_DECODER_NAMED(TEST_TYPE, DISPLAY_NAME)\
+b64_survey::Base64SurveyRegistry::RegisterRawDecodeTest<TEST_TYPE> register_##TEST_TYPE##_raw_decode(DISPLAY_NAME)
 
 #define BASE64_REGISTER_RAW_DECODER(TEST_TYPE)\
-b64_survey::Base64SurveyRegistry::RegisterRawDecodeTest<TEST_TYPE> register_##TEST_TYPE##_raw_decode(#TEST_TYPE)
+BASE64_REGISTER_RAW_DECODER_NAMED(TEST_TYPE, #TEST_TYPE)
 
 } // namespace b64_survey

@@ -229,8 +229,8 @@
     <ClCompile Include="..\..\src\InternetSoftwareConsortium\InternetSoftwareConsortium.cpp" />
     <ClCompile Include="..\..\src\InternetSoftwareConsortium\test_InternetSoftwareConsortium.cpp" />
     <ClCompile Include="..\..\src\JouniMalinen\test_jounimalinen.cpp" />
-    <ClCompile Include="..\..\src\libb64\libb64\src\cdecode.c" />
-    <ClCompile Include="..\..\src\libb64\libb64\src\cencode.c" />
+    <ClCompile Include="..\..\libs\libb64\src\cdecode.c" />
+    <ClCompile Include="..\..\libs\libb64\src\cencode.c" />
     <ClCompile Include="..\..\src\libb64\test_libb64.cpp" />
     <ClCompile Include="..\..\src\libcurl\curl_base64.cpp" />
     <ClCompile Include="..\..\src\libcurl\test_libcurl.cpp" />

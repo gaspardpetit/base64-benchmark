@@ -6,6 +6,7 @@
 
 #define base64_encode gaspardpetit_simd_encode
 #define base64_decode gaspardpetit_simd_decode
+#define base64url_decode gaspardpetit_simd_url_decode
 #define base64_decode_unchecked gaspardpetit_simd_decode_unchecked
 #include "../../libs/gaspardpetit/base64/base64.h"
 
@@ -35,7 +36,7 @@ static size_t simd_decode(const unsigned char* input, size_t length,
 #if defined(GASPARDPETIT_DIRECT_AVX2)
     return base64_avx2_decode_standard(input, length, output);
 #else
-    return base64_decode(input, length, output, 0);
+    return base64_decode(input, length, output);
 #endif
 }
 
@@ -171,10 +172,10 @@ TEST(GaspardPetit_SIMD, validates_every_simd_lane)
             if (valid)
                 continue;
             encoded[position] = static_cast<char>(byte);
-            EXPECT_EQ(BASE64_ERROR, base64_decode(
+            EXPECT_EQ(BASE64_ERROR, base64url_decode(
                 reinterpret_cast<const unsigned char*>(encoded.data()),
                 encoded.size(),
-                reinterpret_cast<unsigned char*>(decoded.data()), 1))
+                reinterpret_cast<unsigned char*>(decoded.data())))
                 << "position " << position << ", byte " << byte;
         }
         encoded[position] = 'A';
