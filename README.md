@@ -8,10 +8,10 @@ This repository tests and compares the correctness and performance of C and C++ 
 
 ## Conclusion
 
-- SIMD-accelerated implementations provide the highest sustained throughput on large payloads. In the Windows 32 KiB combined result, [GaspardPetit SIMD](https://github.com/gaspardpetit/base64) reaches 11.285 GB/s, followed by [TurboBase64](https://github.com/powturbo/Turbo-Base64) at 10.183 GB/s, [base64 (Alfred Klomp)](https://github.com/aklomp/base64) at 9.022 GB/s, and [simdutf](https://github.com/simdutf/simdutf) at 7.126 GB/s.
+- SIMD-accelerated implementations provide the highest sustained throughput on large payloads. In the Windows 32 KiB combined result, [GaspardPetit SIMD](https://github.com/gaspardpetit/base64) reaches 11.163 GB/s, followed by [TurboBase64](https://github.com/powturbo/Turbo-Base64) at 10.210 GB/s, [base64 (Alfred Klomp)](https://github.com/aklomp/base64) at 9.146 GB/s, and [simdutf](https://github.com/simdutf/simdutf) at 9.014 GB/s.
 - GaspardPetit SIMD also leads the current Linux 32 KiB combined result at 9.802 GB/s and ranks second on macOS at 7.179 GB/s. These figures are not direct hardware comparisons because each platform was measured on a different machine.
-- The portable [GaspardPetit](https://github.com/gaspardpetit/base64) path remains the leading architecture-neutral implementation in the current Windows ranking at 2.560 GB/s. It also leads the architecture-neutral encoders and decoders at 32 KiB in the published Linux and macOS results.
-- [base64 (Tobias Locker)](https://github.com/tobiaslocker/base64) and [Chromium's `modp_b64`](https://chromium.googlesource.com/chromium/src/third_party/modp_b64/) remain close to each other, as expected from their related designs. At 32 KiB on Windows their combined throughput is 2.044 GB/s and 1.972 GB/s, respectively.
+- The portable [GaspardPetit](https://github.com/gaspardpetit/base64) path remains the leading architecture-neutral implementation in the current Windows ranking at 2.670 GB/s. It also leads the architecture-neutral encoders and decoders at 32 KiB in the published Linux and macOS results.
+- [base64 (Tobias Locker)](https://github.com/tobiaslocker/base64) and [Chromium's `modp_b64`](https://chromium.googlesource.com/chromium/src/third_party/modp_b64/) remain close to each other, as expected from their related designs. At 32 KiB on Windows their combined throughput is 2.029 GB/s and 1.718 GB/s, respectively.
 - For small payloads, fixed call and wrapper costs are a significant part of the measurement. Differences at 32 bytes are often only a few nanoseconds and should not be treated as meaningful without repeated measurements on the target system.
 - Rankings change with the compiler, architecture, payload size, and operation. Encoding and decoding results should therefore be considered separately when only one direction matters.
 - Performance is only one selection criterion. Licensing, malformed-input handling, streaming support, memory allocation, API design, and portability differ among these implementations and are not normalized by this benchmark.
@@ -81,38 +81,39 @@ For dependencies with a pinned revision, the date is the commit date of that exa
 
 | Rank | 32 KiB throughput | Implementation | Source | Pinned commit date | License | Notes |
 | ---: | ---: | --- | --- | --- | --- | --- |
-| 1 | 11.285 GB/s | GaspardPetit SIMD | [gaspardpetit/base64](https://github.com/gaspardpetit/base64) | 2026-09-15 | BSD-3-Clause | Runtime-dispatched AVX2 or NEON backend. |
-| 2 | 10.183 GB/s | Turbob64 | [powturbo/Turbo-Base64](https://github.com/powturbo/Turbo-Base64) | 2026-06-28 | GPL-3.0 | SIMD-accelerated implementation. |
-| 3 | 9.022 GB/s | base64 (Alfred Klomp) | [aklomp/base64](https://github.com/aklomp/base64) | 2026-07-12 | BSD-2-Clause | C99 implementation with SIMD acceleration. |
-| 4 | 7.126 GB/s | simdutf-9.2.0 | [simdutf/simdutf](https://github.com/simdutf/simdutf) | 2026-09-15 | Apache-2.0 OR MIT | C++ Unicode and Base64 library with SIMD acceleration. |
-| 5 | 2.560 GB/s | GaspardPetit | [gaspardpetit/base64](https://github.com/gaspardpetit/base64) | 2026-09-15 | BSD-3-Clause | Portable header-only and compiled C/C++ implementation. |
-| 6 | 2.044 GB/s | base64 (Tobias Locker) | [tobiaslocker/base64](https://github.com/tobiaslocker/base64) | 2025-11-23 | MIT | Single-header C++ implementation based on Nick Galbreath's `modp_b64` approach. |
-| 7 | 1.972 GB/s | ModpB64Chromium | [Chromium `modp_b64`](https://chromium.googlesource.com/chromium/src/third_party/modp_b64/) | 2025-09-18 | BSD-3-Clause | Chromium's copy of `modp_b64`. |
-| 8 | 1.597 GB/s | picobase64 | [GermanAizek/picobase64](https://github.com/GermanAizek/picobase64) | 2025-10-19 | GPL-3.0 | Header-only C++ implementation. |
-| 9 | 1.580 GB/s | Polfosol_IMUtility | [IMProject/IMUtility](https://github.com/IMProject/IMUtility) | 2025-05-24 | BSD-3-Clause | IMUtility's adaptation of the Polfosol implementation. |
-| 10 | 1.578 GB/s | Adition | [Benchmark source](src/adition) | 2020-12-12 | Unknown | Implementation contributed directly to this repository. |
-| 11 | 1.339 GB/s | libcurl | [curl](https://curl.se/libcurl/) | 2024-06-07 | curl | — |
-| 12 | 1.244 GB/s | NibbleAndAHalf | [superwills/NibbleAndAHalf](https://github.com/superwills/NibbleAndAHalf/) | 2016-12-13 | Zlib | — |
-| 13 | 1.039 GB/s | polfosol | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2022-02-27 | Unknown | — |
-| 14 | 0.900 GB/s | Gnome | [GNOME GLib](https://github.com/GNOME/glib/blob/main/glib/gbase64.c) | 2016-12-13 | LGPL-2.0-or-later | — |
-| 15 | 0.849 GB/s | apache | [Apple Open Source](https://github.com/apple-oss-distributions/apache1/blob/apache1-697/apache1/src/ap/ap_base64.c) | 2020-06-30 | Apache-1.1 | Believed to be based on Rob McCool's 1993 `uuencode` implementation. |
-| 16 | 0.735 GB/s | cppcodec | [tplgy/cppcodec](https://github.com/tplgy/cppcodec) | 2022-09-06 | MIT | — |
-| 17 | 0.691 GB/s | test_wikibooks_org_c | [Wikibooks](https://en.wikibooks.org/wiki/Algorithm_Implementation/Miscellaneous/Base64) | 2016-12-13 | CC BY-SA | C implementation. |
-| 18 | 0.682 GB/s | TomyKaria | [tomykaira gist](https://gist.github.com/tomykaira/f0fd86b6c73063283afe550bc5d77594) | 2024-09-30 | MIT | Single-header C++ implementation. |
-| 19 | 0.621 GB/s | jounimalinen | [FreeBSD WPA utilities](https://web.mit.edu/freebsd/head/contrib/wpa/src/utils/base64.c) | 2016-12-13 | BSD | — |
-| 20 | 0.507 GB/s | libb64-2.0.0.1-9-g64ab5ed | [Transmission/libb64](https://github.com/transmission/libb64) | 2023-02-10 | Public domain | Nine commits after v2.0.0.1 on the maintained Transmission branch. |
-| 21 | 0.394 GB/s | Manuel Martinez | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2016-12-12 | Unknown | — |
-| 22 | 0.372 GB/s | base64 (Mat Gomes) | [matheusgomes28/base64pp](https://github.com/matheusgomes28/base64pp) | 2024-10-12 | MIT | C++ implementation accompanied by a [technical article](https://matgomes.com/base64-encode-decode-cpp/). |
-| 23 | 0.346 GB/s | DaedalusAlpha | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2016-12-13 | Unknown | — |
-| 24 | 0.274 GB/s | Elegant Dice | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2016-12-12 | Unknown | — |
-| 25 | 0.154 GB/s | Boost-1.92.0 | [Boost.Serialization](https://github.com/boostorg/serialization) | 2026-06-28 | BSL-1.0 | Uses the Base64 archive iterators. |
-| 26 | 0.138 GB/s | test_wikibooks_org_cpp | [Wikibooks](https://en.wikibooks.org/wiki/Algorithm_Implementation/Miscellaneous/Base64) | 2020-06-30 | CC BY-SA | C++ implementation. |
-| 27 | 0.136 GB/s | Arduino-Base64 | [adamvr/arduino-base64](https://github.com/adamvr/arduino-base64) | 2016-12-12 | MIT | Uses [BuLogics/libb64](https://github.com/BuLogics/libb64). |
-| 28 | 0.119 GB/s | adp-gmbh (René Nyffenegger) | [adp-gmbh.ch](http://www.adp-gmbh.ch/cpp/common/base64.html) | 2016-12-12 | Zlib | — |
-| 29 | 0.091 GB/s | Internet Software Consortium | [Apple Open Source](https://github.com/apple-oss-distributions/basic_cmds/blob/basic_cmds-55/uuencode/base64.c) | 2020-06-30 | ISC and IBM notices | — |
-| 30 | 0.068 GB/s | LihO | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2016-12-13 | Unknown | — |
-| 31 | 0.044 GB/s | ETL-20.49.0 | [ETLCPP/etl](https://github.com/ETLCPP/etl) | 2026-09-08 | MIT | Streaming, fixed-capacity C++ implementation intended for embedded systems. |
-| 32 | 0.012 GB/s | user152949 | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2024-09-30 | Unknown | — |
+| 1 | 11.163 GB/s | GaspardPetit SIMD | [gaspardpetit/base64](https://github.com/gaspardpetit/base64) | 2026-09-15 | BSD-3-Clause | Runtime-dispatched AVX2 or NEON backend. |
+| 2 | 10.210 GB/s | Turbob64 | [powturbo/Turbo-Base64](https://github.com/powturbo/Turbo-Base64) | 2026-06-28 | GPL-3.0 | SIMD-accelerated implementation. |
+| 3 | 9.146 GB/s | base64 (Alfred Klomp) | [aklomp/base64](https://github.com/aklomp/base64) | 2026-07-12 | BSD-2-Clause | C99 implementation with SIMD acceleration. |
+| 4 | 9.014 GB/s | simdutf-9.2.0 | [simdutf/simdutf](https://github.com/simdutf/simdutf) | 2026-09-15 | Apache-2.0 OR MIT | C++ Unicode and Base64 library with SIMD acceleration. |
+| 5 | 2.670 GB/s | GaspardPetit | [gaspardpetit/base64](https://github.com/gaspardpetit/base64) | 2026-09-15 | BSD-3-Clause | Portable header-only and compiled C/C++ implementation. |
+| 6 | 2.029 GB/s | base64 (Tobias Locker) | [tobiaslocker/base64](https://github.com/tobiaslocker/base64) | 2025-11-23 | MIT | Single-header C++ implementation based on Nick Galbreath's `modp_b64` approach. |
+| 7 | 1.807 GB/s | picobase64 | [GermanAizek/picobase64](https://github.com/GermanAizek/picobase64) | 2025-10-19 | GPL-3.0 | Header-only C++ implementation. |
+| 8 | 1.793 GB/s | simdutf-scalar-9.2.0 | [simdutf/simdutf](https://github.com/simdutf/simdutf) | 2026-09-15 | Apache-2.0 OR MIT | Portable scalar fallback implementation. |
+| 9 | 1.718 GB/s | ModpB64Chromium | [Chromium `modp_b64`](https://chromium.googlesource.com/chromium/src/third_party/modp_b64/) | 2025-09-18 | BSD-3-Clause | Chromium's copy of `modp_b64`. |
+| 10 | 1.584 GB/s | Polfosol_IMUtility | [IMProject/IMUtility](https://github.com/IMProject/IMUtility) | 2025-05-24 | BSD-3-Clause | IMUtility's adaptation of the Polfosol implementation. |
+| 11 | 1.576 GB/s | Adition | [Benchmark source](src/adition) | 2020-12-12 | Unknown | Implementation contributed directly to this repository. |
+| 12 | 1.363 GB/s | libcurl | [curl](https://curl.se/libcurl/) | 2024-06-07 | curl | — |
+| 13 | 1.327 GB/s | NibbleAndAHalf | [superwills/NibbleAndAHalf](https://github.com/superwills/NibbleAndAHalf/) | 2016-12-13 | Zlib | — |
+| 14 | 1.068 GB/s | polfosol | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2022-02-27 | Unknown | — |
+| 15 | 0.908 GB/s | Gnome | [GNOME GLib](https://github.com/GNOME/glib/blob/main/glib/gbase64.c) | 2016-12-13 | LGPL-2.0-or-later | — |
+| 16 | 0.826 GB/s | apache | [Apple Open Source](https://github.com/apple-oss-distributions/apache1/blob/apache1-697/apache1/src/ap/ap_base64.c) | 2020-06-30 | Apache-1.1 | Believed to be based on Rob McCool's 1993 `uuencode` implementation. |
+| 17 | 0.736 GB/s | cppcodec | [tplgy/cppcodec](https://github.com/tplgy/cppcodec) | 2022-09-06 | MIT | — |
+| 18 | 0.696 GB/s | test_wikibooks_org_c | [Wikibooks](https://en.wikibooks.org/wiki/Algorithm_Implementation/Miscellaneous/Base64) | 2016-12-13 | CC BY-SA | C implementation. |
+| 19 | 0.678 GB/s | TomyKaria | [tomykaira gist](https://gist.github.com/tomykaira/f0fd86b6c73063283afe550bc5d77594) | 2024-09-30 | MIT | Single-header C++ implementation. |
+| 20 | 0.620 GB/s | jounimalinen | [FreeBSD WPA utilities](https://web.mit.edu/freebsd/head/contrib/wpa/src/utils/base64.c) | 2016-12-13 | BSD | — |
+| 21 | 0.540 GB/s | libb64-2.0.0.1-9-g64ab5ed | [Transmission/libb64](https://github.com/transmission/libb64) | 2023-02-10 | Public domain | Nine commits after v2.0.0.1 on the maintained Transmission branch. |
+| 22 | 0.393 GB/s | Manuel Martinez | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2016-12-12 | Unknown | — |
+| 23 | 0.362 GB/s | base64 (Mat Gomes) | [matheusgomes28/base64pp](https://github.com/matheusgomes28/base64pp) | 2024-10-12 | MIT | C++ implementation accompanied by a [technical article](https://matgomes.com/base64-encode-decode-cpp/). |
+| 24 | 0.347 GB/s | DaedalusAlpha | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2016-12-13 | Unknown | — |
+| 25 | 0.291 GB/s | Elegant Dice | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2016-12-12 | Unknown | — |
+| 26 | 0.155 GB/s | Boost-1.92.0 | [Boost.Serialization](https://github.com/boostorg/serialization) | 2026-06-28 | BSL-1.0 | Uses the Base64 archive iterators. |
+| 27 | 0.144 GB/s | Arduino-Base64 | [adamvr/arduino-base64](https://github.com/adamvr/arduino-base64) | 2016-12-12 | MIT | Uses [BuLogics/libb64](https://github.com/BuLogics/libb64). |
+| 28 | 0.142 GB/s | test_wikibooks_org_cpp | [Wikibooks](https://en.wikibooks.org/wiki/Algorithm_Implementation/Miscellaneous/Base64) | 2020-06-30 | CC BY-SA | C++ implementation. |
+| 29 | 0.118 GB/s | adp-gmbh (René Nyffenegger) | [adp-gmbh.ch](http://www.adp-gmbh.ch/cpp/common/base64.html) | 2016-12-12 | Zlib | — |
+| 30 | 0.095 GB/s | Internet Software Consortium | [Apple Open Source](https://github.com/apple-oss-distributions/basic_cmds/blob/basic_cmds-55/uuencode/base64.c) | 2020-06-30 | ISC and IBM notices | — |
+| 31 | 0.074 GB/s | LihO | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2016-12-13 | Unknown | — |
+| 32 | 0.043 GB/s | ETL-20.49.0 | [ETLCPP/etl](https://github.com/ETLCPP/etl) | 2026-09-08 | MIT | Streaming, fixed-capacity C++ implementation intended for embedded systems. |
+| 33 | 0.012 GB/s | user152949 | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c) | 2024-09-30 | Unknown | — |
 | — | — | A.Hristov | [Benchmark source](src/A.Hristov) | 2021-02-24 | Unknown | Not present in the published Windows results. |
 | — | — | omnifarious | [Stack Overflow](https://stackoverflow.com/questions/5288076/base64-encoding-and-decoding-with-openssl) | 2020-07-03 | Unknown | Does not always produce valid output; not present in the published Windows results. |
 | — | — | Polfosol_mod | [Stack Overflow](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c/13935718) | 2022-02-27 | Unknown | Decoder-only variant. |
