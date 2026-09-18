@@ -12,7 +12,7 @@ include(FetchContent)
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG        b514bdc898e2951020cbdca1304b75f5950d1f59
+  GIT_TAG        063de7e9578f82b369302001269680b4b1553359
   SYSTEM
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
@@ -48,6 +48,9 @@ aux_source_directory(./src/base64-tl CTR_SOURCES)
 aux_source_directory(./src/DaedalusAlpha CTR_SOURCES)
 aux_source_directory(./src/ElegantDice CTR_SOURCES)
 aux_source_directory(./src/gnome CTR_SOURCES)
+aux_source_directory(./src/IMUtility CTR_SOURCES)
+set_property(SOURCE ./src/IMUtility/test_polfosol_imutility.cpp
+  APPEND PROPERTY INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/src/IMUtility")
 aux_source_directory(./src/InternetSoftwareConsortium CTR_SOURCES)
 aux_source_directory(./src/JouniMalinen CTR_SOURCES)
 aux_source_directory(./src/libb64 CTR_SOURCES)
@@ -63,7 +66,8 @@ aux_source_directory(./src/adition CTR_SOURCES)
 aux_source_directory(./src/A.Hristov CTR_SOURCES)
 aux_source_directory(./src/tomykaria CTR_SOURCES)
 aux_source_directory(./src/stov-180947 CTR_SOURCES)
-aux_source_directory(./src/libb64/libb64/src C_SOURCES)
+include_directories(libs/libb64/include)
+aux_source_directory(./libs/libb64/src C_SOURCES)
 list(APPEND CTR_SOURCES ./src/GaspardPetit/test_gaspardpetit.cpp)
 if((MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 8) OR
    (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND

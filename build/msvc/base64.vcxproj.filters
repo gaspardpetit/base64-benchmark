@@ -181,10 +181,10 @@
     <ClCompile Include="..\..\src\cppcodec\test_cppcodec.cpp">
       <Filter>impl\CppCodec</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libb64\libb64\src\cdecode.c">
+    <ClCompile Include="..\..\libs\libb64\src\cdecode.c">
       <Filter>impl\Libb64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\libb64\libb64\src\cencode.c">
+    <ClCompile Include="..\..\libs\libb64\src\cencode.c">
       <Filter>impl\Libb64</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\adition\adition.cpp">

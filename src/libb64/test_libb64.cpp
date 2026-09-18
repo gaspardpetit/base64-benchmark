@@ -30,5 +30,5 @@ struct Libb64
 base64::encoder Libb64::e;
 base64::decoder Libb64::d;
 
-BASE64_REGISTER_ENCODER(Libb64);
-BASE64_REGISTER_DECODER(Libb64);
+BASE64_REGISTER_ENCODER_NAMED(Libb64, "libb64-2.0.0.1-9-g64ab5ed");
+BASE64_REGISTER_DECODER_NAMED(Libb64, "libb64-2.0.0.1-9-g64ab5ed");

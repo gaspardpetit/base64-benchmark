@@ -1,7 +1,3 @@
-// workaround for https://github.com/boostorg/serialization/issues/315
-#define BOOST_NO_EXCEPTIONS
-namespace boost { template<class E> void throw_exception(E& e) {} }
-
 #include "../Base64SurveyRegistry.hpp"
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/base64_from_binary.hpp>
@@ -31,20 +27,16 @@ struct Boost
 	{
         using namespace boost::archive::iterators;
         using It = transform_width<binary_from_base64<std::string::const_iterator>, 8, 6>;
-        auto binary = std::string(It(base64.begin()), It(base64.end()));
-        // Remove padding.
-        auto length = base64.size();
-        if (binary.size() > 2 && base64[length - 1] == '=' && base64[length - 2] == '=')
-        {
-            binary.erase(binary.end() - 2, binary.end());
+        size_t padding = 0;
+        if (!base64.empty() && base64.back() == '=') {
+            padding = 1;
+            if (base64.size() > 1 && base64[base64.size() - 2] == '=')
+                padding = 2;
         }
-        else if (binary.size() > 1 && base64[length - 1] == '=')
-        {
-            binary.erase(binary.end() - 1, binary.end());
-        }
-        return binary;
+        return std::string(
+            It(base64.begin()), It(base64.end() - padding));
     }
 };
 
-BASE64_REGISTER_ENCODER(Boost);
-BASE64_REGISTER_DECODER(Boost);
+BASE64_REGISTER_ENCODER_NAMED(Boost, "Boost-1.92.0");
+BASE64_REGISTER_DECODER_NAMED(Boost, "Boost-1.92.0");

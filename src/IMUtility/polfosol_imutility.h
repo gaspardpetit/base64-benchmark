@@ -1,9 +1,10 @@
 #include <stdbool.h>
+#include <cstdint>
+#include <cstring>
 #include <string>
 namespace polfosol_imutility {
 
-#define BOOTLOADER_UTILITY_INC_BASE64_H_
-
+#include "IMUtility/Inc/base64.h"
 #include "IMUtility/Src/base64.c"
 
 std::string Base64_encode(unsigned char *bytes, size_t len)
